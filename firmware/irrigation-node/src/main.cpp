@@ -4,6 +4,7 @@
 #include <MQTTClient.h>
 #include <WiFi.h>
 #include <Wire.h>
+#include <esp_system.h>
 #include <time.h>
 
 #include "secrets.h"
@@ -22,13 +23,14 @@ bool automaticWateringArmed = true;
 bool telemetryDue = true;
 bool pendingPumpRequest = false;
 bool soilReadingAvailable = false;
-bool timeConfigured = false;
+bool sntpRequested = false;
 uint32_t pendingPumpDurationS = 0;
 uint32_t pumpStartedAtMs = 0;
 uint32_t pumpDurationS = 0;
 uint32_t lastSensorAtMs = 0;
 uint32_t lastTelemetryAtMs = 0;
 uint32_t lastMqttAttemptAtMs = 0;
+uint32_t lastSntpRequestAtMs = 0;
 float soilMoisturePct = 0.0F;
 float airTempC = NAN;
 float airHumidityPct = NAN;
@@ -47,7 +49,22 @@ const char* reasonName(PumpReason reason) {
 
 uint32_t unixTimestamp() {
   const time_t now = time(nullptr);
-  return now > 0 ? static_cast<uint32_t>(now) : 0;
+  return static_cast<uint32_t>(now);
+}
+
+bool timeSynchronized() {
+  // Reject the ESP32's unset epoch so shared event and telemetry timestamps are Unix seconds.
+  return time(nullptr) >= 1704067200;  // 2024-01-01T00:00:00Z
+}
+
+void requestSntpTime(uint32_t nowMs) {
+  if (timeSynchronized() ||
+      (sntpRequested && uint32_t(nowMs - lastSntpRequestAtMs) < SNTP_RETRY_INTERVAL_MS)) {
+    return;
+  }
+  configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+  lastSntpRequestAtMs = nowMs;
+  sntpRequested = true;
 }
 
 void writeRelay(bool on) {
@@ -65,7 +82,7 @@ float soilPercentFromAdc(int rawAdc) {
 }
 
 void publishPumpEvent(const char* state, PumpReason reason) {
-  if (!mqttClient.connected()) {
+  if (!mqttClient.connected() || !timeSynchronized()) {
     return;
   }
   JsonDocument event;
@@ -132,7 +149,7 @@ void readSensors(uint32_t nowMs) {
 }
 
 void publishTelemetry(uint32_t nowMs) {
-  if (!mqttClient.connected() ||
+  if (!mqttClient.connected() || !timeSynchronized() ||
       (!telemetryDue && uint32_t(nowMs - lastTelemetryAtMs) < TELEMETRY_INTERVAL_MS)) {
     return;
   }
@@ -171,7 +188,8 @@ void queuePumpCommand(String &topic, String &payload) {
   }
 
   const uint32_t requestedSeconds = duration.as<uint32_t>();
-  if (requestedSeconds == 0 || pendingPumpRequest) {
+  // Admission is decided at receipt: an active cycle cannot be extended later.
+  if (requestedSeconds == 0 || pumpRunning || pendingPumpRequest) {
     return;
   }
   pendingPumpDurationS = min(requestedSeconds, MAX_PUMP_S);
@@ -210,6 +228,7 @@ void setup() {
 
   mqttClient.begin(MQTT_HOST, MQTT_PORT, networkClient);
   mqttClient.onMessage(queuePumpCommand);
+  esp_register_shutdown_handler(disconnectMqttForPlannedShutdown);
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -229,13 +248,10 @@ void loop() {
   }
 
   if (WiFi.status() == WL_CONNECTED) {
-    if (!timeConfigured) {
-      configTime(0, 0, "pool.ntp.org", "time.nist.gov");
-      timeConfigured = true;
-    }
+    requestSntpTime(nowMs);
     connectMqtt(nowMs);
   } else {
-    timeConfigured = false;
+    sntpRequested = false;
   }
   if (mqttClient.connected()) {
     mqttClient.loop();

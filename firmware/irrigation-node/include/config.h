@@ -43,3 +43,4 @@ constexpr float MOISTURE_HYSTERESIS_PCT = 5.0F;
 constexpr uint32_t SENSOR_INTERVAL_MS = 2000;
 constexpr uint32_t TELEMETRY_INTERVAL_MS = 60000;
 constexpr uint32_t MQTT_RECONNECT_INTERVAL_MS = 5000;
+constexpr uint32_t SNTP_RETRY_INTERVAL_MS = 30000;
