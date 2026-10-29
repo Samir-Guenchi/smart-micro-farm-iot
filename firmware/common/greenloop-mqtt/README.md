@@ -13,8 +13,8 @@ Telemetry wraps caller-owned metrics:
 {"ts": 1730000000, "metrics": {"soil_moisture_pct": 42.5}}
 ```
 
-Events merge caller-owned fields with the timestamp:
+Event payloads merge caller-owned fields with the timestamp:
 
 ```json
-{"ts": 1730000000, "event": "pump_started", "duration_s": 120}
+{"ts": 1730000000, "type": "pump", "state": "started", "reason": "manual"}
 ```
