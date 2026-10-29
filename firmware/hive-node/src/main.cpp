@@ -43,13 +43,22 @@ bool synchronizeTime() {
 }
 
 bool readWeightKg(float& weightKg) {
-  // wait_ready_timeout avoids the HX711 library's blocking read path when DOUT is absent.
-  if (!hiveScale.wait_ready_timeout(HX711_READY_TIMEOUT_MS)) {
-    Serial.println("HX711 not ready; omitting hive_weight_kg.");
-    return false;
+  // Bound every conversion: get_units() waits indefinitely if DOUT stops becoming ready.
+  float totalKg = 0.0F;
+  for (uint8_t sample = 0; sample < HX711_SAMPLE_COUNT; ++sample) {
+    if (!hiveScale.wait_ready_timeout(HX711_READY_TIMEOUT_MS)) {
+      Serial.println("HX711 not ready; omitting hive_weight_kg.");
+      return false;
+    }
+
+    const float sampleKg = hiveScale.get_units(1);
+    if (!isfinite(sampleKg)) {
+      return false;
+    }
+    totalKg += sampleKg;
   }
 
-  weightKg = hiveScale.get_units(HX711_SAMPLE_COUNT);
+  weightKg = totalKg / HX711_SAMPLE_COUNT;
   return isfinite(weightKg);
 }
 
