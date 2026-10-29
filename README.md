@@ -160,6 +160,9 @@ students and researchers; and visitors looking for a day on a working farm.
 | **2027** | Grow and validate | 500+ assistant users; paid tier for professional farmers; first snail export buyer; LIAA innovation voucher; school and team visits |
 | **2028** | Scale | 100k+ EUR yearly revenue; license the model to partner farms in North Africa and Southern Europe; Arabic, French and English versions |
 
+The detailed build plan, including why the web dashboard comes before a mobile
+app and when the AI farm agent can be added, is in [ROADMAP.md](ROADMAP.md).
+
 ## Status
 
 Early stage and moving. The coop door and solar camera are installed and
@@ -174,6 +177,7 @@ assets/
   brand/     logo and mark (SVG for light and dark, PNG exports, generator script)
   images/    photos from the farm
 docs/        startup visa applications and the LIAA program guide
+ROADMAP.md   phased build plan for 2026–2028
 ```
 
 ## The logo
