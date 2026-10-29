@@ -178,10 +178,13 @@ docs/        startup visa applications and the LIAA program guide
 
 ## The logo
 
-The mark is a single brush stroke that loops around and opens into a leaf, the
-farm's cycle drawn in one gesture. The orange dot in the middle is the seed (or
-the sun, or an egg: on this farm they all start the loop). The wordmark is
-hand-lettered rather than typeset.
+The "l" in greenloop is written as one cursive pen stroke, and the loop of
+that "l" is a leaf. The stroke starts at an orange seed, rises as a hairline,
+turns at the leaf tip, comes down heavy and crosses itself, so a single gesture
+reads as the letter, a leaf and a closed loop: the farm's cycle, from seed back
+to soil. The seed also sits where a dot would go, a quiet nod to the connected
+side of the farm. The rest of the word is hand-lettered rather than typeset, and
+the leaf-l on its own is the symbol.
 
 Use `greenloop-logo-light.svg` on light backgrounds and `greenloop-logo-dark.svg`
 on dark ones; `greenloop-mark-*.svg` is the symbol on its own, for avatars and
