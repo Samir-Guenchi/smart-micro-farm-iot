@@ -36,7 +36,7 @@ jobs:
           projects=()
           if [[ -d firmware ]]; then
             mapfile -d '' -t projects < <(
-              find firmware -mindepth 2 -maxdepth 2 -type f -name platformio.ini -print0 | sort -z
+              find firmware -mindepth 2 -maxdepth 2 -type f -name platformio.ini -printf '%h\0' | sort -z
             )
           fi
 
