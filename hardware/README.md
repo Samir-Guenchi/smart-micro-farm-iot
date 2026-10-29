@@ -73,9 +73,62 @@ unknown costs are not zero and cannot be used to verify a complete historical
 farm hardware total. Keep them separate from this dated add-on subtotal until
 records are available.
 
-## Planned sections
+## Reference wiring and pin assignments
 
-Subsequent hardware documentation can extend this page with node pin tables,
-reference wiring diagrams, solar sizing assumptions, and a transparent cost
-comparison. Any added prices should retain the dated, VAT-included, shipping-
-excluded convention above or state a clearly revised convention.
+These diagrams show reference wiring for a generic `esp32dev` board only.
+Confirm the exact board revision, connector labels, sensor supply limits, and
+module pinout before wiring. ESP32 GPIO signals are **3.3 V logic**; never
+apply 5 V to a GPIO or drive an external load from a GPIO. Shared 3V3 and GND
+shown below are for low-voltage logic and sensors only.
+
+### Irrigation node
+
+| Function | ESP32 pin | Reference connection |
+| --- | --- | --- |
+| Soil probe analog output | GPIO34 / ADC34 | Probe AO to ADC34; power probe per its module rating |
+| SHT31 I2C data | GPIO21 / SDA | SHT31 SDA |
+| SHT31 I2C clock | GPIO22 / SCL | SHT31 SCL |
+| Relay module control | GPIO26 | Relay IN only; use a compatible 3.3 V logic input |
+| Logic/sensor supply | 3V3 and GND | Common low-voltage logic supply/ground as supported by modules |
+
+See [irrigation reference wiring](irrigation-node.svg). The relay contacts and
+pump supply form a separate power circuit. The priced relay is a conditional
+example for a **12 V DC / 10 A load only**; the installed pump's rating is
+unknown and this example is not approved for it. Verify the actual pump
+nameplate, startup current, and relay/contact ratings before field connection.
+Do not connect mains voltage using this reference diagram.
+
+### Hive weighing and battery node
+
+| Function | ESP32 pin | Reference connection |
+| --- | --- | --- |
+| HX711 data out | GPIO32 | HX711 DOUT/DT |
+| HX711 clock | GPIO33 | HX711 SCK/CLK |
+| SHT31 I2C data | GPIO21 / SDA | SHT31 SDA |
+| SHT31 I2C clock | GPIO22 / SCL | SHT31 SCL |
+| Battery divider midpoint | GPIO34 / ADC34 | Divider midpoint to ADC34 |
+| Logic/sensor supply | 3V3 and GND | Common low-voltage logic ground; supply modules within their ratings |
+
+See [hive reference wiring](hive-node.svg). The load cell's E+, E−, A+, and
+A− leads connect to the matching HX711 excitation and channel A terminals;
+confirm the load-cell color code because it varies by manufacturer. The
+divider drawing uses two **100 kΩ** resistors, ratio 2.0, and is for a
+single-cell battery with maximum voltage **4.2 V** only. Other pack voltages
+require recalculating both divider hardware and firmware before connection.
+Keep ADC34 within the board's allowed input range.
+
+### Coop door contact
+
+| Function | ESP32 pin | Reference connection |
+| --- | --- | --- |
+| Reed contact input | GPIO27 | GPIO27 node with external pull-up to 3V3; normally-open contact closes to GND |
+| Logic supply/return | 3V3 and GND | Pull-up reference and switch return |
+| Optional light sensor | — | Out of scope for this reference |
+
+See [coop reference wiring](coop-node.svg). Use an external pull-up resistor
+from the GPIO27 signal to 3V3. The normally-open reed contact connects the
+signal to GND when closed; do not connect the reed circuit to a higher voltage.
+
+All drawings are reference wiring, not a field installation approval. Verify
+the exact ESP32 board revision and all hardware ratings before connecting
+field equipment.
