@@ -2,9 +2,9 @@
 
 This page records confirmed equipment already on the farm and a dated,
 priceable reference bill of materials (BOM) for the first three ESP32 nodes.
-Prices were checked on **2026-10-30** and can change. Reference pin tables and
-wiring diagrams are included below; power estimates and a cost comparison may
-be added in later hardware tasks.
+Prices were checked on **2026-10-30** and can change. Reference pin tables,
+wiring diagrams, illustrative energy sizing, and a conditional cost comparison
+are included below.
 
 ## Existing farm equipment
 
@@ -75,6 +75,107 @@ boards, Okköbi door, solar camera, or installed solar panel/system. Those
 unknown costs are not zero and cannot be used to verify a complete historical
 farm hardware total. Keep them separate from this dated add-on subtotal until
 records are available.
+
+## Illustrative node energy and solar sizing
+
+The following is a normalized reference calculation for the three new sensing
+nodes, not measured consumption or a site forecast. The local startup material
+describes a planned pilot in Algeria, but gives no farm coordinates; country
+alone is not enough to choose a site-specific solar resource. The 4 and 2
+peak-sun-hour values below are sizing assumptions only. Use the European
+Commission [PVGIS manual](https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis/using-pvgis-5/pvgis-5-user-manual_en)
+and [PVGIS calculator](https://re.jrc.ec.europa.eu/pvg_tools/en/) with actual
+coordinates, panel orientation, and system details for a site estimate.
+
+| Node | Battery-side active current assumption | Sleep current assumption | Daily time allocation | Reference daily energy |
+| --- | ---: | ---: | --- | ---: |
+| Irrigation | 100 mA | 0 mA assumed (no sleep allocation) | 24 h active, 0 h sleep | 3.7 V × 0.100 A × 24 h = **8.88 Wh/day** |
+| Coop | 100 mA | 0 mA assumed (no sleep allocation) | 24 h active, 0 h sleep | 3.7 V × 0.100 A × 24 h = **8.88 Wh/day** |
+| Hive | 150 mA | 10 mA | 4 h active, 20 h sleep | (3.7 V × 0.150 A × 4 h) + (3.7 V × 0.010 A × 20 h) = **2.96 Wh/day** |
+| **Total** |  |  |  | **20.72 Wh/day** |
+
+These battery-side currents and durations are **unmeasured planning assumptions**
+to be checked on the assembled boards over representative operating cycles.
+The hive's active/sleep split is a simplified normalized allocation; measure
+actual dev-board current, peripherals, regulator losses, and wake duration.
+Irrigation and coop are conservatively modeled as continuously active in this
+example. As chip specifications only, the ESP32 datasheet lists 10 µA for the
+RTC-timer-plus-RTC-memory deep-sleep configuration, 20–31 mA for a dual-core
+chip at 80 MHz, and separate Wi-Fi transmit/receive modes and figures. These
+figures describe the SoC, not a development board or battery-side load, and
+were **not** substituted for the assumptions in the table. See the official
+[Espressif ESP32 Series datasheet](https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf).
+Actual draw depends on the exact module/board, regulator, sensors, relay state,
+radio activity, firmware, and supply path.
+
+Use these formulas for the reference sizing:
+
+```text
+Wh/day = sum(W × hours)
+panel_Wp >= Wh/day / (peak_sun_hours × system_efficiency)
+battery_Wh >= daily_Wh × autonomy_days / usable_depth_of_discharge
+battery_Ah >= battery_Wh / battery_voltage_V
+```
+
+For this example, use **4 peak-sun-hours/day**, **65% combined PV-to-load
+efficiency**, **2 autonomy days**, **80% usable battery depth of discharge**,
+and a **3.7 V nominal single-cell battery rail (4.2 V maximum)**. This reference
+rail aligns with the hive divider and firmware `BATTERY_DIVIDER_RATIO = 2.0`;
+other packs require updating the divider and firmware ratio. The calculations
+are:
+
+- Reference panel: `20.72 / (4 × 0.65) = 7.97 Wp` (minimum arithmetic result).
+- Lower-winter sensitivity at **2 assumed peak-sun-hours/day**:
+  `20.72 / (2 × 0.65) = 15.94 Wp`.
+- Battery for two days: `20.72 × 2 / 0.80 = 51.8 Wh`, or
+  `51.8 / 3.7 = 14.0 Ah` nominal at 3.7 V.
+
+The winter line is a sensitivity case, not a winter forecast. The installed
+panel capacity, battery pack/capacity, system voltage, controller, and pump
+load are unreported, so repository information cannot establish site-system
+adequacy. The node-only estimate also excludes the pump and other installed or
+planned loads; it does not size their power system.
+
+## Cost comparison and conditional headroom
+
+The priced recommended add-on parts total **€68.18 including the conditional
+relay example, VAT included, shipping excluded**. Against the stated €3,000
+comparison claim, the arithmetic headroom is:
+
+```text
+€3,000 - €68.18 = €2,931.82
+```
+
+This parts estimate fits within that claim only if the unpriced existing
+hardware and any other kit included in the claim remain within **€2,931.82**.
+Existing boards, door, camera, installed solar equipment, pump, battery,
+controller, wiring, and installation have unknown costs here; they are not
+zero and are not included in the €68.18 priced-parts subtotal. The subtotal is
+not a complete farm system cost or a verification of the claim.
+
+## Setup and calibration notes
+
+- **Soil probe:** record ADC readings in the actual soil when dry and when
+  thoroughly wet, then set and validate the firmware endpoints against those
+  readings. Do not treat raw ADC counts as universal moisture percentages.
+- **Hive scale:** tare the installed platform with the empty hive/platform in
+  place, then apply one or more known masses spanning the operating range to
+  determine and verify the HX711 scale factor and offset. Recheck after final
+  mounting; ensure the load cell and mechanics have adequate capacity and
+  margin.
+- **Coop reed contact:** verify the normally-open contact closes to GND when
+  the door/magnet position represents closed, with the GPIO pull-up enabled.
+  Confirm firmware `door_open` reports `1` for open and `0` for closed through
+  several physical open/close cycles.
+- **Battery divider:** for the documented 100 kΩ / 100 kΩ divider, verify ADC
+  readings and calibrated battery voltage across the single-cell range,
+  especially up to 4.2 V at the battery input. Keep the ADC pin within the
+  exact board's permitted input range. Recalculate divider values and set
+  `BATTERY_DIVIDER_RATIO` for any different battery pack.
+- **Pump relay:** choose and approve a relay only after reading the installed
+  pump nameplate and checking voltage, running and starting current, contact
+  DC/AC rating, and load type. The priced 12 V DC / 10 A module is a conditional
+  example, not confirmation of suitability.
 
 ## Reference wiring and pin assignments
 
