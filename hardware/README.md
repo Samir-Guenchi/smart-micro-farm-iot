@@ -2,8 +2,9 @@
 
 This page records confirmed equipment already on the farm and a dated,
 priceable reference bill of materials (BOM) for the first three ESP32 nodes.
-Prices were checked on **2026-10-30** and can change. The wiring diagrams,
-power estimates, and cost comparison will be added in later hardware tasks.
+Prices were checked on **2026-10-30** and can change. Reference pin tables and
+wiring diagrams are included below; power estimates and a cost comparison may
+be added in later hardware tasks.
 
 ## Existing farm equipment
 
@@ -23,8 +24,9 @@ complete farm hardware cost calculation.
 
 The following quantities cover the irrigation, hive, and coop sensing
 references: two SHT31 modules (irrigation and hive), one soil probe, one
-HX711/load-cell pair, one reed contact and separate magnet, and one battery
-divider resistor pack. The relay is included only as a conditional example.
+HX711/load-cell pair, one reed contact and separate magnet, one battery
+divider resistor pack, and a pack of 10 kΩ pull-up resistors (one resistor
+used). The relay is included only as a conditional example.
 
 **Price convention:** each unit price is the supplier's displayed EUR retail
 price including displayed VAT, excluding shipping, checked on 2026-10-30.
@@ -42,8 +44,9 @@ costs may vary by destination and basket.
 | Normally-open reed contact | 1 | [Ben's Electronics](https://www.benselectronics.nl/products/reed-contact-normally-open) | €0.45 | €0.45 |
 | 5 × 8 mm magnet for reed contact (sold separately) | 1 | [Opencircuit](https://opencircuit.shop/product/magnet-5x8-mm-also-suitable-reed-contacts) | €0.95 | €0.95 |
 | 20-pack of 100 kΩ, 1/4 W, ±5% resistors | 1 pack | [Informatica IT](https://www.informaticait.it/en/2524-20-pack-100k-ohm-carbon-film-resistor-tht-1-4w-5-0-25w-2-3x6mm.html) | €1.31 | €1.31 |
+| 10-pack of 10 kΩ, 1/4 W, ±1% resistors (one used as coop pull-up) | 1 pack | [Informatica IT](https://www.informaticait.it/en/2026-10k-ohm-carbon-film-resistor-1-4w-0-25w-1-10-pack.html) | €0.92 | €0.92 |
 | **Conditional relay example only: 3.3 V logic module, 10 A / 30 V DC contacts** | 1 | [Partco](https://partco.shop/product/relay-module-1-ch-opto-isolated-3vdc-5283) | €5.60 | €5.60 |
-| **Reference add-on subtotal, including conditional relay** |  |  |  | **€67.26** |
+| **Reference add-on subtotal, including conditional relay** |  |  |  | **€68.18** |
 
 The subtotal is the sum of the listed line totals and excludes shipping and all
 existing owner-supplied assets with unknown historic cost. The €5.60 relay is a
