@@ -7,8 +7,8 @@
   <path d="M305 260 H455" class="wire"/><circle cx="455" cy="260" r="6" fill="#246b9a"/><text x="330" y="245" class="small">GPIO27 to signal node</text>
   <path d="M160 330 V125 H530" class="pwr"/><text x="75" y="130" class="small">ESP32 3V3</text>
   <polyline points="530,125 540,115 550,135 560,115 570,135 580,115 590,135 600,125" class="pwr"/><path d="M600 125 H700 V260 H455" class="pwr"/><rect x="520" y="82" width="120" height="24" rx="5" class="dev"/><text x="580" y="99" text-anchor="middle" class="tiny">10 kΩ pull-up</text>
-  <rect x="700" y="215" width="230" height="95" rx="10" class="dev"/><text x="815" y="250" text-anchor="middle" class="label">Normally-open</text><text x="815" y="280" text-anchor="middle" class="small">reed contact</text>
-  <path d="M455 260 H700" class="wire"/><path d="M930 260 V390 H250 V330" class="gnd"/><text x="700" y="420" class="small">Contact closes node to GND; return to ESP32 GND</text>
+  <rect x="700" y="215" width="230" height="95" rx="10" class="dev"/><text x="815" y="242" text-anchor="middle" class="label">Normally-open reed</text><text x="815" y="291" text-anchor="middle" class="small">contact (shown open)</text>
+  <path d="M455 260 H755" class="wire"/><circle cx="755" cy="260" r="5" fill="#246b9a"/><path d="M755 260 L790 240" class="wire"/><path d="M810 250 V270" class="wire"/><circle cx="810" cy="260" r="5" fill="#246b9a"/><path d="M810 260 H930" class="wire"/><path d="M930 260 V390 H250 V330" class="gnd"/><text x="700" y="420" class="small">When closed, contact connects GPIO27 node to ESP32 GND</text>
   <rect x="55" y="405" width="510" height="90" rx="10" class="dash"/><text x="310" y="445" text-anchor="middle" class="label">Optional light sensor: OUT OF SCOPE</text><text x="310" y="473" text-anchor="middle" class="small">No connection or pin assignment shown</text>
   <text x="40" y="535" class="small">Use 3V3 only; do not apply higher voltage to GPIO27. The pull-up and switch use the shared logic ground.</text>
 </svg>

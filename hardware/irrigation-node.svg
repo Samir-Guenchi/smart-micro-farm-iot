@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1120" height="700" viewBox="0 0 1120 700" role="img" aria-labelledby="title desc">
   <title id="title">Irrigation node reference wiring</title>
-  <desc id="desc">Generic esp32dev reference. Soil probe analog output goes to GPIO34, SHT31 SDA and SCL go to GPIO21 and GPIO22, and GPIO26 controls a 3.3 volt compatible relay input. Logic shares 3V3 and ground. Isolated relay contacts switch a separately supplied conditional 12 volt DC, 10 amp example pump circuit. The actual farm pump rating is unknown.</desc>
+  <desc id="desc">Generic esp32dev reference. SEN0193 soil probe VCC and GND connect to 3V3 and shared logic ground; its 0 to 3 volt analog output goes to GPIO34. SHT31 SDA and SCL go to GPIO21 and GPIO22, and GPIO26 controls a 3.3 volt compatible relay input. Isolated relay contacts switch a separately supplied conditional 12 volt DC, 10 amp example pump circuit. The actual farm pump rating is unknown.</desc>
   <defs><style>
     text{font-family:Arial,Helvetica,sans-serif;fill:#172b3a} .title{font-size:28px;font-weight:700}.sub{font-size:16px;fill:#405568}.label{font-size:17px;font-weight:600}.small{font-size:14px}.tiny{font-size:12px}.box{fill:#f5f8fb;stroke:#38536b;stroke-width:2}.device{fill:#fff;stroke:#54738d;stroke-width:2}.wire{fill:none;stroke:#246b9a;stroke-width:3}.pwr{fill:none;stroke:#b64b35;stroke-width:3}.gnd{fill:none;stroke:#525b63;stroke-width:3}.sep{stroke:#bd6c19;stroke-width:3;stroke-dasharray:8 7}
   </style></defs>
@@ -8,8 +8,9 @@
   <text x="40" y="78" class="sub">Generic esp32dev only · 3.3 V GPIO logic · verify exact board revision before wiring</text>
   <rect x="400" y="160" width="300" height="350" rx="12" class="box"/><text x="550" y="198" text-anchor="middle" class="label">ESP32 dev board</text><text x="550" y="222" text-anchor="middle" class="small">GPIO is 3.3 V logic; no loads on GPIO</text>
   <text x="425" y="280" class="label">GPIO34 / ADC34</text><text x="425" y="350" class="label">GPIO21 / SDA</text><text x="425" y="395" class="label">GPIO22 / SCL</text><text x="425" y="445" class="label">GPIO26</text><text x="425" y="480" class="small">3V3 · GND</text>
-  <rect x="55" y="220" width="230" height="125" rx="10" class="device"/><text x="170" y="254" text-anchor="middle" class="label">Soil probe</text><text x="170" y="280" text-anchor="middle" class="small">AO → ADC34</text><text x="170" y="305" text-anchor="middle" class="small">Supply per module rating</text>
+  <rect x="55" y="220" width="230" height="125" rx="10" class="device"/><text x="170" y="254" text-anchor="middle" class="label">SEN0193 soil probe</text><text x="170" y="280" text-anchor="middle" class="small">AO · 0–3 V → ADC34</text><text x="170" y="305" text-anchor="middle" class="small">VCC → 3V3 · GND → shared GND</text>
   <path d="M285 280 H400" class="wire"/><text x="310" y="269" class="small">AO</text>
+  <path d="M330 480 V320 H285" class="pwr"/><path d="M350 515 V335 H285" class="gnd"/>
   <rect x="55" y="400" width="230" height="125" rx="10" class="device"/><text x="170" y="435" text-anchor="middle" class="label">SHT31 module</text><text x="170" y="463" text-anchor="middle" class="small">SDA · SCL</text><text x="170" y="490" text-anchor="middle" class="small">3V3 · GND</text>
   <path d="M285 455 H340 V350 H400" class="wire"/><path d="M285 470 H360 V395 H400" class="wire"/><text x="304" y="446" class="small">SDA</text><text x="304" y="489" class="small">SCL</text>
   <path d="M285 500 H330 V480 H400" class="pwr"/><path d="M700 480 H745 V515 H350 V515 H285" class="gnd"/>
