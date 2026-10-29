@@ -219,7 +219,11 @@ confirm the load-cell color code because it varies by manufacturer. The
 divider drawing uses two **100 kΩ** resistors, ratio 2.0, and is for a
 single-cell battery with maximum voltage **4.2 V** only. Other pack voltages
 require recalculating both divider hardware and firmware before connection.
-Keep ADC34 within the board's allowed input range.
+The hive humidity telemetry key is `air_humidity_pct`. Keep ADC34 within the
+board's allowed input range. The divider is for battery measurement only;
+do not connect the measured single-cell battery directly to ESP32 VCC. The
+board power and charger/regulator path is unspecified and must be selected for
+the actual panel, battery chemistry and voltage, and ESP32 board input.
 
 ### Coop door contact
 
