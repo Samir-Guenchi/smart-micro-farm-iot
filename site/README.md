@@ -20,7 +20,7 @@ the link in `calLink`.
 ## Preview locally
 
 ```bash
-./site/build.sh && python3 -m http.server -d _site 8000
+./site/build.sh && python3 -m http.server -d site/_site 8000
 # open http://localhost:8000
 ```
 
