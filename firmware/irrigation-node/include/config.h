@@ -44,3 +44,4 @@ constexpr uint32_t SENSOR_INTERVAL_MS = 2000;
 constexpr uint32_t TELEMETRY_INTERVAL_MS = 60000;
 constexpr uint32_t MQTT_RECONNECT_INTERVAL_MS = 5000;
 constexpr uint32_t SNTP_RETRY_INTERVAL_MS = 30000;
+constexpr uint8_t PUMP_EVENT_QUEUE_CAPACITY = 8;

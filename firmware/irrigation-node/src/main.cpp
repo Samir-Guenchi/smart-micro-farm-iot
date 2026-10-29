@@ -13,6 +13,11 @@
 
 enum class PumpReason : uint8_t { Automatic, Manual, Timeout };
 
+struct PumpEvent {
+  const char* state;
+  PumpReason reason;
+};
+
 WiFiClient networkClient;
 MQTTClient mqttClient(256);
 Adafruit_SHT31 sht31;
@@ -31,6 +36,11 @@ uint32_t lastSensorAtMs = 0;
 uint32_t lastTelemetryAtMs = 0;
 uint32_t lastMqttAttemptAtMs = 0;
 uint32_t lastSntpRequestAtMs = 0;
+uint32_t droppedPumpEventCount = 0;
+uint8_t pumpEventHead = 0;
+uint8_t pumpEventTail = 0;
+uint8_t pumpEventCount = 0;
+PumpEvent pumpEventQueue[PUMP_EVENT_QUEUE_CAPACITY];
 float soilMoisturePct = 0.0F;
 float airTempC = NAN;
 float airHumidityPct = NAN;
@@ -81,15 +91,42 @@ float soilPercentFromAdc(int rawAdc) {
   return constrain(percent, 0.0F, 100.0F);
 }
 
-void publishPumpEvent(const char* state, PumpReason reason) {
+void enqueuePumpEvent(const char* state, PumpReason reason) {
+  if (pumpEventCount == PUMP_EVENT_QUEUE_CAPACITY) {
+    ++droppedPumpEventCount;
+    Serial.printf("Pump event queue full; dropped newest event (%lu total).\n",
+                  static_cast<unsigned long>(droppedPumpEventCount));
+    return;
+  }
+
+  pumpEventQueue[pumpEventTail] = {state, reason};
+  pumpEventTail = (pumpEventTail + 1) % PUMP_EVENT_QUEUE_CAPACITY;
+  ++pumpEventCount;
+}
+
+void flushPumpEvents() {
   if (!mqttClient.connected() || !timeSynchronized()) {
     return;
   }
-  JsonDocument event;
-  event["type"] = "pump";
-  event["state"] = state;
-  event["reason"] = reasonName(reason);
-  greenloop::publishEvent(mqttClient, NODE_ID, unixTimestamp(), event.as<JsonObjectConst>());
+
+  while (pumpEventCount > 0) {
+    const PumpEvent& event = pumpEventQueue[pumpEventHead];
+    JsonDocument payload;
+    payload["type"] = "pump";
+    payload["state"] = event.state;
+    payload["reason"] = reasonName(event.reason);
+    if (!greenloop::publishEvent(mqttClient, NODE_ID, unixTimestamp(),
+                                 payload.as<JsonObjectConst>())) {
+      return;
+    }
+    pumpEventHead = (pumpEventHead + 1) % PUMP_EVENT_QUEUE_CAPACITY;
+    --pumpEventCount;
+  }
+}
+
+void publishPumpEvent(const char* state, PumpReason reason) {
+  enqueuePumpEvent(state, reason);
+  flushPumpEvents();
 }
 
 bool startPump(uint32_t durationSeconds, PumpReason reason, uint32_t nowMs) {
@@ -255,6 +292,7 @@ void loop() {
   }
   if (mqttClient.connected()) {
     mqttClient.loop();
+    flushPumpEvents();
     publishTelemetry(nowMs);
   }
 }
