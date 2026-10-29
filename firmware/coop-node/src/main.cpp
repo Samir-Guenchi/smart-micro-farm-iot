@@ -21,19 +21,20 @@ MQTTClient mqttClient(256);
 
 DoorState stableDoorState = DoorState::Closed;
 DoorState candidateDoorState = DoorState::Closed;
-bool doorStateInitialized = false;
+bool candidateInitialized = false;
+bool stableStateAvailable = false;
 uint32_t candidateSinceMs = 0;
 uint32_t lastTelemetryAtMs = 0;
 uint32_t lastMqttAttemptAtMs = 0;
 uint32_t lastSntpRequestAtMs = 0;
-bool telemetryDue = true;
+bool telemetryDue = false;
 bool sntpRequested = false;
 uint32_t droppedDoorEventCount = 0;
 uint8_t doorEventHead = 0;
 uint8_t doorEventTail = 0;
 uint8_t doorEventCount = 0;
 DoorEvent doorEventQueue[DOOR_EVENT_QUEUE_CAPACITY];
-bool doorEventTimestampPending[DOOR_EVENT_QUEUE_CAPACITY];
+bool doorEventNeedsEstimate[DOOR_EVENT_QUEUE_CAPACITY];
 
 uint32_t unixTimestamp() {
   return static_cast<uint32_t>(time(nullptr));
@@ -58,7 +59,7 @@ DoorState readDoorState() {
   return digitalRead(REED_SWITCH_PIN) == LOW ? DoorState::Closed : DoorState::Open;
 }
 
-void enqueueDoorEvent(DoorState state, uint32_t capturedAt, bool timestampPending) {
+void enqueueDoorEvent(DoorState state, uint32_t capturedAt, bool needsEstimate) {
   if (doorEventCount == DOOR_EVENT_QUEUE_CAPACITY) {
     doorEventHead = (doorEventHead + 1) % DOOR_EVENT_QUEUE_CAPACITY;
     --doorEventCount;
@@ -68,35 +69,37 @@ void enqueueDoorEvent(DoorState state, uint32_t capturedAt, bool timestampPendin
   }
 
   doorEventQueue[doorEventTail] = {state, capturedAt};
-  doorEventTimestampPending[doorEventTail] = timestampPending;
+  doorEventNeedsEstimate[doorEventTail] = needsEstimate;
   doorEventTail = (doorEventTail + 1) % DOOR_EVENT_QUEUE_CAPACITY;
   ++doorEventCount;
 }
 
 void sampleDoor(uint32_t nowMs) {
   const DoorState reading = readDoorState();
-  if (!doorStateInitialized) {
-    stableDoorState = reading;
+  if (!candidateInitialized || reading != candidateDoorState) {
     candidateDoorState = reading;
     candidateSinceMs = nowMs;
-    doorStateInitialized = true;
+    candidateInitialized = true;
+    return;
+  }
+
+  if (uint32_t(nowMs - candidateSinceMs) < DEBOUNCE_INTERVAL_MS) {
+    return;
+  }
+
+  if (!stableStateAvailable) {
+    // Establish the initial state only after a full debounce interval; it is not an event.
+    stableDoorState = candidateDoorState;
+    stableStateAvailable = true;
     telemetryDue = true;
     return;
   }
 
-  if (reading != candidateDoorState) {
-    candidateDoorState = reading;
-    candidateSinceMs = nowMs;
-    return;
-  }
-
-  if (candidateDoorState != stableDoorState &&
-      uint32_t(nowMs - candidateSinceMs) >= DEBOUNCE_INTERVAL_MS) {
+  if (candidateDoorState != stableDoorState) {
     stableDoorState = candidateDoorState;
-    // Store millis temporarily before SNTP; flushDoorEvents maps it to Unix time later.
-    const bool timestampPending = !timeSynchronized();
-    enqueueDoorEvent(stableDoorState, timestampPending ? nowMs : unixTimestamp(),
-                     timestampPending);
+    const bool needsEstimate = !timeSynchronized();
+    // Before SNTP, retain the monotonic acceptance time for later Unix-time estimation.
+    enqueueDoorEvent(stableDoorState, needsEstimate ? nowMs : unixTimestamp(), needsEstimate);
   }
 }
 
@@ -105,14 +108,15 @@ void flushDoorEvents() {
     return;
   }
 
-  const uint32_t nowMs = millis();
-  const uint32_t nowUnix = unixTimestamp();
+  // Use one clock pair for every pre-SNTP event drained in this pass.
+  const uint32_t anchorMs = millis();
+  const uint32_t anchorUnix = unixTimestamp();
   while (doorEventCount > 0) {
     DoorEvent& event = doorEventQueue[doorEventHead];
-    if (doorEventTimestampPending[doorEventHead]) {
-      // Reconstruct capture-time Unix seconds from the synchronized clock anchor.
-      event.ts = nowUnix - uint32_t(nowMs - event.ts) / 1000UL;
-      doorEventTimestampPending[doorEventHead] = false;
+    if (doorEventNeedsEstimate[doorEventHead]) {
+      // Estimate capture-time Unix seconds from this single synchronized clock anchor.
+      event.ts = anchorUnix - uint32_t(anchorMs - event.ts) / 1000UL;
+      doorEventNeedsEstimate[doorEventHead] = false;
     }
     JsonDocument fields;
     fields["type"] = "door";
@@ -127,7 +131,7 @@ void flushDoorEvents() {
 }
 
 void publishTelemetry(uint32_t nowMs) {
-  if (!mqttClient.connected() || !timeSynchronized() ||
+  if (!mqttClient.connected() || !stableStateAvailable || !timeSynchronized() ||
       (!telemetryDue && uint32_t(nowMs - lastTelemetryAtMs) < TELEMETRY_INTERVAL_MS)) {
     return;
   }
