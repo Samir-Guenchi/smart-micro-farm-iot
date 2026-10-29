@@ -41,6 +41,7 @@
 - Create: `firmware/common/greenloop-mqtt/library.json`
 - Create: `firmware/common/greenloop-mqtt/src/GreenLoopMqtt.h`
 - Create: `firmware/common/greenloop-mqtt/src/GreenLoopMqtt.cpp`
+- Create: `firmware/common/greenloop-mqtt/README.md`
 
 **Interfaces:**
 - `topicFor(nodeId, channel)` returns `greenloop/<nodeId>/<channel>`.
@@ -65,11 +66,9 @@ bool subscribeCommands(MQTTClient& client, const char* nodeId);
 ```
 
 - [ ] Create `library.json` for `GreenLoopMqtt`, declaring `256dpi/MQTT` 2.4.6 and `bblanchon/ArduinoJson` 7.4.3.
-- [ ] Use this PlatformIO local dependency line in each node project: `GreenLoopMqtt=symlink://../common/greenloop-mqtt`.
 - [ ] Define the four channel names in one enum and implement `topicFor()` with the exact `greenloop/` prefix.
 - [ ] Implement the will, status, telemetry, event, and command-subscription helpers using the interface above.
 - [ ] Use JSON documents with caller-owned fields; serialize each envelope into a temporary `String` before publishing.
-- [ ] Instantiate each MQTT client with a 256-byte read/write buffer so command and telemetry payloads fit.
 - [ ] Ensure telemetry uses `retained=false, qos=0`, event uses `retained=false, qos=1`, status uses `retained=true, qos=1`, and the will uses `retained=true, qos=1`.
 - [ ] Add a short library README with the helper contract and one example telemetry/event payload.
 
@@ -95,10 +94,12 @@ framework = arduino
 monitor_speed = 115200
 lib_deps =
   GreenLoopMqtt=symlink://../common/greenloop-mqtt
+  bblanchon/ArduinoJson@7.4.3
   adafruit/Adafruit SHT31 Library@2.2.2
 ```
 
 - [ ] Configure a PlatformIO Arduino project for board `esp32dev`; add local `GreenLoopMqtt`, ArduinoJson, and Adafruit SHT31 dependencies.
+- [ ] Instantiate the MQTT client with a 256-byte read/write buffer and use `GreenLoopMqtt=symlink://../common/greenloop-mqtt` as the local shared dependency.
 - [ ] Add example credentials with empty Wi-Fi and broker values, and declare the same macro names in `config.h` for the sketch to consume.
 - [ ] Add soil ADC dry/wet calibration constants and a conversion that clamps the result to 0–100 percent; use GPIO34 for the capacitive sensor.
 - [ ] Add SHT31 reads on I2C GPIO21/GPIO22; omit invalid sensor readings instead of publishing `NaN`.
@@ -133,11 +134,13 @@ framework = arduino
 monitor_speed = 115200
 lib_deps =
   GreenLoopMqtt=symlink://../common/greenloop-mqtt
+  bblanchon/ArduinoJson@7.4.3
   adafruit/Adafruit SHT31 Library@2.2.2
   bogde/HX711@0.7.5
 ```
 
 - [ ] Configure `esp32dev` Arduino project with the shared library, ArduinoJson, Adafruit SHT31, and bogde HX711 0.7.5.
+- [ ] Instantiate the MQTT client with a 256-byte read/write buffer and use `GreenLoopMqtt=symlink://../common/greenloop-mqtt` as the local shared dependency.
 - [ ] Add the common credential example and use GPIO32 for HX711 DOUT, GPIO33 for SCK, GPIO21/GPIO22 for SHT31, and GPIO34 for battery ADC.
 - [ ] Read the load cell with a bounded ready timeout; skip the weight metric if HX711 is unavailable rather than blocking startup.
 - [ ] Compute weight in kilograms from the documented scale factor and offset; read `hive_temp_c`, `air_humidity_pct`, and `battery_v` from the SHT31 and calibrated divider.
@@ -165,10 +168,13 @@ platform = espressif32
 board = esp32dev
 framework = arduino
 monitor_speed = 115200
-lib_deps = GreenLoopMqtt=symlink://../common/greenloop-mqtt
+lib_deps =
+  GreenLoopMqtt=symlink://../common/greenloop-mqtt
+  bblanchon/ArduinoJson@7.4.3
 ```
 
 - [ ] Configure `esp32dev` Arduino project with the shared MQTT library and ArduinoJson.
+- [ ] Instantiate the MQTT client with a 256-byte read/write buffer and use `GreenLoopMqtt=symlink://../common/greenloop-mqtt` as the local shared dependency.
 - [ ] Add the common credential example and document GPIO27-to-reed-to-ground wiring with the external pull-up.
 - [ ] Sample the reed switch without blocking; accept a new state only after 50 ms of unchanged readings.
 - [ ] Publish a `door` event for each stable state transition and publish current state as `door_open` (`1` open, `0` closed) in telemetry every 60 seconds.
