@@ -1,0 +1,95 @@
+{
+  "app": {
+    "name": "GreenLoop Farm",
+    "offlineBanner": "You are offline. Showing the last data received.",
+    "demoBanner": "Demo mode: showing simulated data."
+  },
+  "nav": {
+    "overview": "Farm",
+    "bed": "Bed",
+    "coop": "Coop",
+    "settings": "Settings"
+  },
+  "login": {
+    "title": "Sign in",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Sign in",
+    "error": "Wrong username or password."
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "Could not load data. Pull to retry or check the connection.",
+    "retry": "Retry",
+    "online": "Online",
+    "offline": "Offline",
+    "lastSeen": "Last seen {{when}}",
+    "never": "never",
+    "justNow": "just now",
+    "minutesAgo_one": "{{count}} min ago",
+    "minutesAgo_other": "{{count}} min ago",
+    "hoursAgo_one": "{{count}} h ago",
+    "hoursAgo_other": "{{count}} h ago",
+    "daysAgo_one": "{{count}} day ago",
+    "daysAgo_other": "{{count}} days ago"
+  },
+  "nodes": {
+    "irrigation-1": "Irrigation · Bed 1",
+    "hive-1": "Beehive 1",
+    "coop-1": "Chicken coop"
+  },
+  "metrics": {
+    "soil_moisture_pct": "Soil moisture",
+    "air_temp_c": "Air temperature",
+    "air_humidity_pct": "Air humidity",
+    "pump_on": "Pump",
+    "water_liters": "Water used",
+    "hive_weight_kg": "Hive weight",
+    "hive_temp_c": "Hive temperature",
+    "battery_v": "Battery"
+  },
+  "bed": {
+    "title": "Bed 1",
+    "history": "Soil moisture, last {{hours}} h",
+    "range": "Range",
+    "hours": "{{count}} h",
+    "pump": "Pump",
+    "pumpOn": "On",
+    "pumpOff": "Off",
+    "water": "Water now",
+    "duration": "Duration",
+    "minutes_one": "{{count}} minute",
+    "minutes_other": "{{count}} minutes",
+    "confirm": "Water bed 1 for {{minutes}} min?",
+    "sent": "Watering started for {{minutes}} min.",
+    "capped": "Capped to {{minutes}} min, the safety limit.",
+    "failed": "Could not start the pump. Try again.",
+    "noData": "No readings in this period."
+  },
+  "coop": {
+    "title": "Chicken coop",
+    "door": "Door",
+    "open": "Open",
+    "closed": "Closed",
+    "unknown": "Unknown",
+    "today": "Today",
+    "openedAt": "Opened at {{time}}",
+    "closedAt": "Closed at {{time}}",
+    "noEventsToday": "No door activity yet today.",
+    "since": "since {{time}}"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "notifications": "Notifications",
+    "notificationsHelp": "Get farm alerts on this device, next to the Telegram ones.",
+    "enable": "Enable notifications",
+    "enabled": "Notifications are on for this device.",
+    "denied": "Notifications are blocked in the browser settings.",
+    "unsupported": "This browser does not support push notifications. On iPhone, add the app to the home screen first.",
+    "notConfigured": "Push is not configured on the server yet.",
+    "install": "Install app",
+    "installHelp": "Add GreenLoop to the home screen to open it like an app.",
+    "logout": "Sign out"
+  }
+}
