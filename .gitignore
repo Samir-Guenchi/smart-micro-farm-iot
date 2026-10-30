@@ -1,9 +1,33 @@
-# PlatformIO build output
-**/.pio/
-
-# Local firmware credentials (keep secrets.example.h tracked)
+# Secrets: never commit real credentials. Keep the *.example files tracked.
+.env
+.env.*
+!.env.example
 **/include/secrets.h
+secrets.h
 
-# Local tooling noise
+# PlatformIO
+**/.pio/
+.pioenvs/
+.piolibdeps/
+
+# Python
 __pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+*.egg-info/
+
+# Node
+node_modules/
+dist/
+.vite/
+coverage/
+
+# Editors and OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
 .DS_Store
+Thumbs.db

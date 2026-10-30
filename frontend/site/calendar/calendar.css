@@ -1,0 +1,47 @@
+:root {
+  --forest: #24452b; --leaf: #5e9b45; --clay: #d9772b; --bg: #f6f3ea; --surface: #fffdf8;
+  --text: #1f2a21; --muted: #5d6b5f; --line: #ddd6c5;
+  color-scheme: light;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+  line-height: 1.5;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #121a14; --surface: #1d281f; --text: #e8eee6; --muted: #a2b2a4; --line: #2f3d31; --forest: #9ccf86; --leaf: #86c66b; color-scheme: dark; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); }
+.top, main { max-width: 860px; margin: 0 auto; padding: 0 16px; }
+.top { padding-top: 1.2rem; }
+.back { color: var(--forest); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+h1 { color: var(--forest); font-size: clamp(1.8rem, 6vw, 2.6rem); margin: 0.8rem 0 0.2rem; }
+.lead { color: var(--muted); margin: 0 0 1.2rem; }
+
+.filters { display: grid; gap: 0.75rem; grid-template-columns: 1fr 1fr; }
+.filters label:first-child { grid-column: 1 / -1; }
+@media (min-width: 640px) { .filters { grid-template-columns: repeat(3, 1fr); } .filters label:first-child { grid-column: auto; } }
+label { display: grid; gap: 0.3rem; font-weight: 600; font-size: 0.9rem; }
+select {
+  font: inherit; min-height: 46px; padding: 0.5rem 0.7rem; border-radius: 10px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--text);
+}
+
+.month-strip { display: flex; gap: 0.4rem; overflow-x: auto; padding: 0.9rem 0 0.4rem; scrollbar-width: none; }
+.month-strip::-webkit-scrollbar { display: none; }
+.month-strip button {
+  flex: 0 0 auto; min-width: 52px; min-height: 40px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--text); font: inherit; font-size: 0.9rem; cursor: pointer;
+}
+.month-strip button.active { background: var(--forest); border-color: var(--forest); color: #fff; font-weight: 700; }
+@media (prefers-color-scheme: dark) { .month-strip button.active { color: #102014; } }
+
+.status { color: var(--muted); margin: 0.8rem 0; }
+.results { display: grid; gap: 1.4rem; }
+.group h2 { font-size: 1.15rem; margin: 0 0 0.6rem; color: var(--forest); }
+.item { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 0.9rem 1rem; margin-bottom: 0.6rem; }
+.item header { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; }
+.item h3 { margin: 0; font-size: 1.05rem; }
+.item p { margin: 0.35rem 0 0; color: var(--muted); }
+.tag { font-size: 0.78rem; font-weight: 600; padding: 0.1rem 0.55rem; border-radius: 999px; background: #e5f1de; color: #24452b; white-space: nowrap; }
+.group-harvest .item { border-left: 4px solid var(--clay); }
+.group-sow .item, .group-plant .item { border-left: 4px solid var(--leaf); }
+.source { color: var(--muted); font-size: 0.85rem; margin: 2rem 0; }

@@ -1,0 +1,40 @@
+# Public site
+
+A one-page site for customers and visitors, published on GitHub Pages:
+the loop, produce, farm visits, photos and contact. No build step and no
+framework: `index.html`, `style.css`, `site.js`, and photos in `img/`
+(resized copies of `assets/images/`).
+
+## Languages
+
+English (`index.html`), French (`fr/index.html`) and Arabic (`ar/index.html`,
+right-to-left), with a language switch in the header. They share `style.css`,
+`site.js` (its few messages are translated in the `TEXT` table, chosen by the
+page's `lang`) and `config.js`. When you change the English page, make the same
+change in the other two. The crop calendar page is English only for now.
+
+## Shop and bookings: ready-made tools, set in `config.js`
+
+| Setting | Empty (default) | Set |
+|---|---|---|
+| `shopUrl` | An order form that sends the order as a message | A button to the shop (Shopify Starter, WooCommerce, Square…) |
+| `calLink` | A visit request form | A Cal.com booking calendar embedded inline, e.g. `"greenloop/farm-tour"` |
+| `whatsapp` / `email` | Forms can't send; a "contact us directly" note shows | Forms open WhatsApp or the email app with the message filled in |
+
+**Before launch, set at least `whatsapp` or `email`.** Cal.com is free: create
+an account, add event types (tour, harvest day, meal, school visit) and put
+the link in `calLink`.
+
+## Preview locally
+
+```bash
+./frontend/site/build.sh && python3 -m http.server -d frontend/site/_site 8000
+# open http://localhost:8000
+```
+
+## Publish
+
+The `pages` workflow deploys on every push to `main` that touches `frontend/site/` or
+`backend/data/`. One-time setup: **Settings → Pages → Build and deployment → Source:
+GitHub Actions**. The site is then at
+`https://samir-guenchi.github.io/smart-micro-farm-iot/`.

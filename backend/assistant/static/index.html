@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GreenLoop assistant</title>
+<style>
+  :root { --bg: #f7f6f1; --card: #fff; --ink: #1f2a1f; --muted: #5d6b5d; --green: #2e5634; --line: #dfe3d8; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #141a14; --card: #1d251d; --ink: #e8eee6; --muted: #a3b0a1; --green: #8fc79a; --line: #2f3a2f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.5 system-ui, sans-serif; background: var(--bg); color: var(--ink); }
+  main { max-width: 720px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; min-height: 100vh; }
+  h1 { font-size: 1.25rem; color: var(--green); margin: 8px 0 4px; }
+  p.hint { color: var(--muted); margin: 0 0 16px; font-size: .9rem; }
+  #log { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+  .msg { padding: 10px 14px; border-radius: 12px; max-width: 90%; white-space: pre-wrap; }
+  .me { align-self: flex-end; background: var(--green); color: var(--bg); }
+  .bot { align-self: flex-start; background: var(--card); border: 1px solid var(--line); }
+  .src { font-size: .8rem; color: var(--muted); margin-top: 6px; }
+  form { display: flex; gap: 8px; position: sticky; bottom: 0; padding: 12px 0; background: var(--bg); }
+  input { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: inherit; }
+  button { padding: 12px 18px; border: 0; border-radius: 10px; background: var(--green); color: var(--bg); font: inherit; cursor: pointer; }
+  button:disabled { opacity: .5; }
+</style>
+</head>
+<body>
+<main>
+  <h1>GreenLoop farming assistant</h1>
+  <p class="hint">Ask about crops, pests, compost, irrigation, poultry or bees. Answers come from the farm's notes and crop calendar, in English, French or Arabic.</p>
+  <div id="log" aria-live="polite"></div>
+  <form id="f">
+    <input id="q" autocomplete="off" placeholder="When do I plant potatoes in Latvia?" maxlength="2000" required>
+    <button id="b">Ask</button>
+  </form>
+</main>
+<script>
+  const log = document.getElementById("log"), q = document.getElementById("q"), b = document.getElementById("b");
+  // Same origin by default; set window.ASSISTANT_API when embedding the page elsewhere.
+  const API = (window.ASSISTANT_API || "") + "/api/assistant/chat";
+  function add(text, who, sources) {
+    const d = document.createElement("div");
+    d.className = "msg " + who;
+    d.dir = "auto";
+    d.textContent = text;
+    if (sources && sources.length) {
+      const s = document.createElement("div");
+      s.className = "src";
+      s.textContent = "Sources: " + sources.map(x => x.type === "note" ? x.title : "crop calendar").join(" · ");
+      d.appendChild(s);
+    }
+    log.appendChild(d);
+    d.scrollIntoView({ behavior: "smooth", block: "end" });
+  }
+  document.getElementById("f").addEventListener("submit", async e => {
+    e.preventDefault();
+    const question = q.value.trim();
+    if (!question) return;
+    add(question, "me");
+    q.value = ""; b.disabled = true;
+    try {
+      const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question }) });
+      const data = await r.json();
+      add(r.ok ? data.answer : (data.detail || "Something went wrong."), "bot", r.ok ? data.sources : []);
+    } catch {
+      add("Could not reach the assistant. Check the connection and try again.", "bot");
+    } finally {
+      b.disabled = false; q.focus();
+    }
+  });
+</script>
+</body>
+</html>

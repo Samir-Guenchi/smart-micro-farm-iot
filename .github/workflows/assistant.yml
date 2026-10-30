@@ -1,0 +1,24 @@
+name: assistant
+
+on:
+  push:
+    branches: [main]
+    paths: ["backend/assistant/**", "backend/knowledge/**", "backend/data/**", ".github/workflows/assistant.yml"]
+  pull_request:
+    paths: ["backend/assistant/**", "backend/knowledge/**", "backend/data/**", ".github/workflows/assistant.yml"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend/assistant
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - run: pytest -q
+      - run: python evals/run_eval.py
+      - run: python ../data/validate_crop_calendar.py ../data/crop-calendar.json

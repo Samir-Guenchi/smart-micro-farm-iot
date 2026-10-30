@@ -1,0 +1,12 @@
+[
+  {"country": "LV", "crop": "potato", "month": 5, "action": "plant", "notes": "Plant seed potatoes once the soil is above 8 °C and the risk of hard frost has passed."},
+  {"country": "LV", "crop": "potato", "month": 9, "action": "harvest", "notes": "Lift main-crop potatoes two weeks after the haulm dies back; dry before storing."},
+  {"country": "LV", "crop": "lettuce", "month": 4, "action": "sow", "notes": "Sow under cover or in a cold frame; transplant outside in May."},
+  {"country": "SE", "crop": "potato", "month": 5, "action": "plant", "notes": "Plant in mid to late May in the south, early June further north."},
+  {"country": "SE", "crop": "lettuce", "month": 7, "action": "harvest", "notes": "Pick outer leaves often; sow again every 3 weeks for a steady supply."},
+  {"country": "FR", "crop": "lettuce", "month": 3, "action": "sow", "notes": "Sow outdoors in rows in the north; under fleece if nights are still cold."},
+  {"country": "FR", "crop": "tomato", "month": 8, "action": "harvest", "notes": "Main harvest month; pick when fully coloured and slightly soft."},
+  {"country": "DZ", "crop": "tomato", "month": 3, "action": "plant", "notes": "Transplant seedlings on the coast once nights stay above 10 °C."},
+  {"country": "DZ", "crop": "broad_bean", "month": 11, "action": "sow", "notes": "Autumn sowing; the winter rains carry the crop to a spring harvest."},
+  {"country": "MA", "crop": "broad_bean", "month": 3, "action": "harvest", "notes": "Pick pods while the beans are still tender; dry the rest on the plant."}
+]

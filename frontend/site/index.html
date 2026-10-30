@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GreenLoop Farm</title>
+  <meta name="description" content="A small circular farm: vegetables, eggs, honey and snails, grown with sun, pond water and cheap sensors. Order produce or book a farm visit.">
+  <meta property="og:title" content="GreenLoop Farm">
+  <meta property="og:description" content="Vegetables, eggs, honey and snails from a smart circular micro-farm. Shop and farm visits.">
+  <meta property="og:image" content="img/coop-door.jpg">
+  <meta name="theme-color" content="#24452B">
+  <link rel="icon" type="image/svg+xml" href="img/greenloop-mark-light.svg">
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+</head>
+<body>
+  <header class="nav">
+    <a href="#top" class="brand" aria-label="GreenLoop Farm home">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="img/greenloop-logo-dark.svg">
+        <img src="img/greenloop-logo-light.svg" alt="GreenLoop Farm" height="40">
+      </picture>
+    </a>
+    <nav>
+      <a href="#loop">The loop</a>
+      <a href="#shop">Shop</a>
+      <a href="#visit">Visit</a>
+      <a href="calendar/">Crop calendar</a>
+      <a href="#contact">Contact</a>
+      <span class="lang" aria-label="Language"><a href="./" lang="en" hreflang="en">EN</a> · <a href="fr/" lang="fr" hreflang="fr">FR</a> · <a href="ar/" lang="ar" hreflang="ar">العربية</a></span>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">Smart micro-farm</p>
+        <h1>A small farm where every output becomes an input.</h1>
+        <p class="lead">Vegetables, fruit, eggs, honey and snails, grown in a closed loop and watched over by cheap sensors running on the sun.</p>
+        <div class="actions">
+          <a class="btn primary" href="#shop">Order from the farm</a>
+          <a class="btn" href="#visit">Book a visit</a>
+        </div>
+      </div>
+      <img class="hero-img" src="img/coop-door.jpg" alt="The automatic coop door on the farm" width="506" height="900">
+    </section>
+
+    <section id="loop" class="band">
+      <h2>The loop</h2>
+      <p class="section-lead">Each part of the farm feeds the next. Nothing leaves as waste.</p>
+      <ol class="loop">
+        <li><span class="ico">🐟</span><b>Fish pond water</b> becomes drip irrigation for vegetables and fruit trees.</li>
+        <li><span class="ico">🐔</span><b>Poultry manure</b> becomes compost for the beds and orchard.</li>
+        <li><span class="ico">🥬</span><b>Trimmings</b> become feed for snails and poultry.</li>
+        <li><span class="ico">🌿</span><b>Azolla from the pond</b> becomes protein feed and green manure.</li>
+        <li><span class="ico">🌽</span><b>Corn grown on site</b> feeds 50 hens and 80 quail.</li>
+        <li><span class="ico">🐝</span><b>10 beehives</b> pollinate every crop and make honey.</li>
+      </ol>
+    </section>
+
+    <section id="shop">
+      <h2>From the farm</h2>
+      <p class="section-lead">Seasonal and in small batches. Order ahead and pick up at the farm, or ask about delivery.</p>
+      <div class="products">
+        <article class="product"><span class="ico big">🥔</span><h3>Vegetables</h3><p>Potatoes, lettuce, tomatoes, broad beans and corn, picked to order.</p><p class="season">June – October</p></article>
+        <article class="product"><span class="ico big">🥚</span><h3>Eggs</h3><p>Free-range hen and quail eggs from birds fed on farm-grown corn.</p><p class="season">All year</p></article>
+        <article class="product"><span class="ico big">🍯</span><h3>Honey</h3><p>Raw honey from our 10 hives, which also pollinate the orchard.</p><p class="season">From August</p></article>
+        <article class="product"><span class="ico big">🐌</span><h3>Snails</h3><p>Farm-raised snails fed on vegetable trimmings, for restaurants and home cooks.</p><p class="season">On request</p></article>
+      </div>
+      <div id="shop-cta" class="cta-box">
+        <!-- Filled by site.js: a shop link if config.shopUrl is set, otherwise the order form below. -->
+        <form id="order-form" class="form" hidden>
+          <h3>Place an order</h3>
+          <div class="row">
+            <label>Name<input name="name" required autocomplete="name"></label>
+            <label>Phone or email<input name="contact" required></label>
+          </div>
+          <fieldset class="checks">
+            <legend>What would you like?</legend>
+            <label><input type="checkbox" name="items" value="Vegetables"> Vegetables</label>
+            <label><input type="checkbox" name="items" value="Eggs"> Eggs</label>
+            <label><input type="checkbox" name="items" value="Honey"> Honey</label>
+            <label><input type="checkbox" name="items" value="Snails"> Snails</label>
+          </fieldset>
+          <label>Quantities and pick-up day<textarea name="details" rows="3" placeholder="e.g. 2 kg potatoes, 12 eggs, Saturday morning"></textarea></label>
+          <button class="btn primary" type="submit">Send order</button>
+          <p class="hint" data-hint></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="visit" class="band">
+      <h2>Visit the farm</h2>
+      <p class="section-lead">See a circular farm at work: the pond, the hives, the orchard and the sensors that run it.</p>
+      <div class="visits">
+        <div class="visit"><h3>Guided tour</h3><p>About 90 minutes around the whole loop, with a tasting at the end.</p></div>
+        <div class="visit"><h3>Harvest day</h3><p>Pick your own vegetables and fruit in season and take them home.</p></div>
+        <div class="visit"><h3>Outdoor meal</h3><p>A farm lunch cooked from what grows here, for families and small groups.</p></div>
+        <div class="visit"><h3>School and team visits</h3><p>Hands-on sessions on food, water and smart farming for classes and startup teams.</p></div>
+      </div>
+      <div id="booking" class="cta-box">
+        <!-- Filled by site.js: Cal.com embed if config.calLink is set, otherwise the request form. -->
+        <div id="cal-embed" hidden></div>
+        <form id="visit-form" class="form" hidden>
+          <h3>Request a visit</h3>
+          <div class="row">
+            <label>Name<input name="name" required autocomplete="name"></label>
+            <label>Phone or email<input name="contact" required></label>
+          </div>
+          <div class="row">
+            <label>Type of visit
+              <select name="type"><option>Guided tour</option><option>Harvest day</option><option>Outdoor meal</option><option>School or team visit</option></select>
+            </label>
+            <label>Preferred date<input type="date" name="date"></label>
+          </div>
+          <label>Group size<input type="number" name="people" min="1" value="2"></label>
+          <button class="btn primary" type="submit">Send request</button>
+          <p class="hint" data-hint></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="smart">
+      <h2>Run from a phone</h2>
+      <p class="section-lead">Cheap, solar-powered hardware keeps an eye on the farm, and the plans are open so other smallholders can copy them.</p>
+      <div class="photos">
+        <figure><img src="img/coop-door.jpg" alt="Automatic coop door" loading="lazy" width="506" height="900"><figcaption><b>Automatic coop door.</b> Opens at sunrise, closes at sunset, so the flock is in before predators come out.</figcaption></figure>
+        <figure><img src="img/solar-camera.jpg" alt="Solar-powered security camera" loading="lazy" width="506" height="900"><figcaption><b>Solar camera.</b> Off-grid, with night vision, covering the poultry, orchard and irrigation.</figcaption></figure>
+        <figure><img src="img/esp32-boards.jpg" alt="ESP32 boards" loading="lazy" width="838" height="900"><figcaption><b>ESP32 sensor nodes.</b> Soil moisture, the drip pump, the hives and the door, reporting to a dashboard.</figcaption></figure>
+      </div>
+      <p><a href="https://github.com/Samir-Guenchi/smart-micro-farm-iot">See the open-source code and hardware →</a></p>
+    </section>
+
+    <section id="contact" class="band">
+      <h2>Contact</h2>
+      <p class="section-lead">Questions, wholesale snails, partnerships or press: get in touch.</p>
+      <p id="contact-links" class="contact-links"></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year">2026</span> GreenLoop Farm · <a href="calendar/">Crop calendar</a> · <a href="https://github.com/Samir-Guenchi/smart-micro-farm-iot">GitHub</a></p>
+  </footer>
+  <script src="site.js"></script>
+</body>
+</html>

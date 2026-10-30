@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crop calendar · GreenLoop Farm</title>
+  <meta name="description" content="What to sow, plant, harvest or prepare this month in Latvia, Algeria, France, Sweden and Morocco.">
+  <meta name="theme-color" content="#24452B">
+  <link rel="stylesheet" href="calendar.css">
+</head>
+<body>
+  <header class="top">
+    <a href="../" class="back">← GreenLoop Farm</a>
+    <h1>Crop calendar</h1>
+    <p class="lead">Pick a country and a month to see what to sow, plant, harvest or prepare.</p>
+  </header>
+
+  <main>
+    <form class="filters" id="filters" aria-label="Filters">
+      <label>Country
+        <select name="country" id="country"></select>
+      </label>
+      <label>Month
+        <select name="month" id="month"></select>
+      </label>
+      <label>Crop
+        <select name="crop" id="crop"></select>
+      </label>
+    </form>
+    <div class="month-strip" id="month-strip" role="tablist" aria-label="Month"></div>
+
+    <p class="status" id="status" role="status"></p>
+    <div id="results" class="results"></div>
+    <p class="source" id="source"></p>
+  </main>
+
+  <script src="calendar.js"></script>
+</body>
+</html>

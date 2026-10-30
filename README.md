@@ -10,6 +10,8 @@
   watched over by cheap sensors and run from a phone.</b>
 </p>
 
+<p align="center">English · <a href="README.fr.md">Français</a> · <a href="README.ar.md">العربية</a></p>
+
 <p align="center">
   <a href="#the-loop">The loop</a> ·
   <a href="#on-the-farm-today">On the farm today</a> ·
@@ -175,12 +177,28 @@ the demand.
 ## Repository layout
 
 ```
-assets/
-  brand/     logo and mark (SVG for light and dark, PNG exports, generator script)
-  images/    photos from the farm
-docs/        startup visa applications and the LIAA program guide
+firmware/    ESP32 firmware, one PlatformIO project per node (in review)
+hardware/    wiring diagrams, bill of materials, solar sizing (in review)
+frontend/              everything that runs in the browser (hosted on Vercel)
+  web/                 farm dashboard, an installable PWA
+  site/                public landing page and crop calendar page
+backend/               everything that runs on a server (hosted on Render)
+  (services)           MQTT broker, TimescaleDB, Grafana, ingest, REST API, Telegram alerts, weather rule
+  assistant/           AI farming assistant (answers from the knowledge base)
+  agent/               farm agent: reads farm data, suggests actions, farmer approves
+  knowledge/           farming notes for the assistant
+  data/                crop calendar dataset
+render.yaml            Render Blueprint for the backend
+ml/          soil-drying prediction model
+assets/      logo, mark and farm photos
+docs/        architecture, monthly progress log, startup visa documents
 ROADMAP.md   phased build plan for 2026–2028
 ```
+
+How the parts connect, and the MQTT and API contracts, are in
+[docs/architecture.md](docs/architecture.md). What has been done each month is
+in [docs/progress-log.md](docs/progress-log.md). Hosting (Render for the backend,
+Vercel for the frontend) is in [docs/deploy.md](docs/deploy.md).
 
 ## The logo
 
@@ -206,3 +224,9 @@ experience.
 
 - Email: hinit.bth@gmail.com
 - LinkedIn: [linkedin.com/in/hinibth7](https://linkedin.com/in/hinibth7)
+
+## License
+
+Code is released under the [MIT License](LICENSE). Documentation, photos, the
+knowledge base and the crop calendar data are CC BY 4.0. See
+[CONTRIBUTING.md](CONTRIBUTING.md) to help build it.
