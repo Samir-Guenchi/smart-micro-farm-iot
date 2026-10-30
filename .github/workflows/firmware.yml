@@ -1,0 +1,89 @@
+name: Firmware
+
+on:
+  push:
+    paths:
+      - "firmware/**"
+      - ".github/workflows/firmware.yml"
+      - ".gitignore"
+      - "README.md"
+  pull_request:
+    paths:
+      - "firmware/**"
+      - ".github/workflows/firmware.yml"
+      - ".gitignore"
+      - "README.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build PlatformIO projects
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Discover PlatformIO projects
+        id: discover
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          projects=()
+          if [[ -d firmware ]]; then
+            mapfile -d '' -t projects < <(
+              find firmware -mindepth 2 -maxdepth 2 -type f -name platformio.ini -printf '%h\0' | sort -z
+            )
+          fi
+
+          if ((${#projects[@]} == 0)); then
+            echo "No PlatformIO projects found; nothing to build."
+            echo "has_projects=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          printf '%s\0' "${projects[@]}" > "$RUNNER_TEMP/platformio-projects.nul"
+          echo "has_projects=true" >> "$GITHUB_OUTPUT"
+          printf 'Discovered %s PlatformIO project(s):\n' "${#projects[@]}"
+          printf '  %s\n' "${projects[@]}"
+
+      - name: Set up Python
+        if: steps.discover.outputs.has_projects == 'true'
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install PlatformIO Core
+        if: steps.discover.outputs.has_projects == 'true'
+        shell: bash
+        run: python -m pip install platformio
+
+      - name: Build each project
+        if: steps.discover.outputs.has_projects == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          while IFS= read -r -d '' project; do
+            example_header="$project/include/secrets.example.h"
+            secrets_header="$project/include/secrets.h"
+
+            if [[ ! -f "$example_header" ]]; then
+              echo "::error title=Missing secrets example::$example_header is required to build $project"
+              exit 1
+            fi
+
+            cp "$example_header" "$secrets_header"
+
+            echo "::group::Building $project"
+            if ! (cd "$project" && pio run); then
+              echo "::endgroup::"
+              echo "::error title=PlatformIO build failed::$project"
+              exit 1
+            fi
+            echo "::endgroup::"
+          done < "$RUNNER_TEMP/platformio-projects.nul"

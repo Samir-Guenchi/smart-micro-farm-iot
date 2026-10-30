@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="700" viewBox="0 0 1120 700" role="img" aria-labelledby="title desc">
+  <title id="title">Irrigation node reference wiring</title>
+  <desc id="desc">Generic esp32dev reference. SEN0193 soil probe VCC and GND connect to 3V3 and shared logic ground; its 0 to 3 volt analog output goes to GPIO34. SHT31 SDA and SCL go to GPIO21 and GPIO22, and GPIO26 controls a 3.3 volt compatible relay input. Isolated relay contacts switch a separately supplied conditional 12 volt DC, 10 amp example pump circuit. The actual farm pump rating is unknown.</desc>
+  <defs><style>
+    text{font-family:Arial,Helvetica,sans-serif;fill:#172b3a} .title{font-size:28px;font-weight:700}.sub{font-size:16px;fill:#405568}.label{font-size:17px;font-weight:600}.small{font-size:14px}.tiny{font-size:12px}.box{fill:#f5f8fb;stroke:#38536b;stroke-width:2}.device{fill:#fff;stroke:#54738d;stroke-width:2}.wire{fill:none;stroke:#246b9a;stroke-width:3}.pwr{fill:none;stroke:#b64b35;stroke-width:3}.gnd{fill:none;stroke:#525b63;stroke-width:3}.sep{stroke:#bd6c19;stroke-width:3;stroke-dasharray:8 7}
+  </style></defs>
+  <rect width="1120" height="700" fill="#fff"/><text x="40" y="48" class="title">Irrigation node · reference wiring</text>
+  <text x="40" y="78" class="sub">Generic esp32dev only · 3.3 V GPIO logic · verify exact board revision before wiring</text>
+  <rect x="400" y="160" width="300" height="350" rx="12" class="box"/><text x="550" y="198" text-anchor="middle" class="label">ESP32 dev board</text><text x="550" y="222" text-anchor="middle" class="small">GPIO is 3.3 V logic; no loads on GPIO</text>
+  <text x="425" y="280" class="label">GPIO34 / ADC34</text><text x="425" y="350" class="label">GPIO21 / SDA</text><text x="425" y="395" class="label">GPIO22 / SCL</text><text x="425" y="445" class="label">GPIO26</text><text x="425" y="480" class="small">3V3 · GND</text>
+  <rect x="55" y="220" width="230" height="125" rx="10" class="device"/><text x="170" y="254" text-anchor="middle" class="label">SEN0193 soil probe</text><text x="170" y="280" text-anchor="middle" class="small">AO · 0–3 V → ADC34</text><text x="170" y="305" text-anchor="middle" class="small">VCC → 3V3 · GND → shared GND</text>
+  <path d="M285 280 H400" class="wire"/><text x="310" y="269" class="small">AO</text>
+  <path d="M330 480 V320 H285" class="pwr"/><path d="M350 515 V335 H285" class="gnd"/>
+  <rect x="55" y="400" width="230" height="125" rx="10" class="device"/><text x="170" y="435" text-anchor="middle" class="label">SHT31 module</text><text x="170" y="463" text-anchor="middle" class="small">SDA · SCL</text><text x="170" y="490" text-anchor="middle" class="small">3V3 · GND</text>
+  <path d="M285 455 H340 V350 H400" class="wire"/><path d="M285 470 H360 V395 H400" class="wire"/><text x="304" y="446" class="small">SDA</text><text x="304" y="489" class="small">SCL</text>
+  <path d="M285 500 H330 V480 H400" class="pwr"/><path d="M700 480 H745 V515 H350 V515 H285" class="gnd"/>
+  <text x="40" y="570" class="small">Low-voltage sensor/logic supply and common ground only, as supported by modules.</text>
+  <rect x="790" y="205" width="250" height="115" rx="10" class="device"/><text x="915" y="240" text-anchor="middle" class="label">3.3 V compatible relay</text><text x="915" y="269" text-anchor="middle" class="small">IN ← GPIO26</text><text x="915" y="294" text-anchor="middle" class="small">Logic side only</text>
+  <path d="M700 445 H750 V280 H790" class="wire"/><text x="740" y="432" class="small">IN</text><path d="M700 480 H765 V303 H790" class="gnd"/><path d="M700 468 H775 V260 H790" class="pwr"/>
+  <line x1="770" y1="350" x2="770" y2="630" class="sep"/><text x="900" y="375" text-anchor="middle" class="label">Separate load power circuit</text>
+  <rect x="790" y="405" width="110" height="78" rx="8" class="device"/><text x="845" y="438" text-anchor="middle" class="small">Relay</text><text x="845" y="460" text-anchor="middle" class="small">COM / NO</text>
+  <rect x="950" y="405" width="145" height="78" rx="8" class="device"/><text x="1022" y="438" text-anchor="middle" class="small">12 V DC pump</text><text x="1022" y="460" text-anchor="middle" class="small">10 A example</text>
+  <rect x="790" y="530" width="135" height="65" rx="8" class="device"/><text x="857" y="557" text-anchor="middle" class="small">12 V supply</text><text x="857" y="578" text-anchor="middle" class="tiny">example only</text>
+  <path d="M925 550 H940 V444 H790" class="pwr"/><path d="M900 444 H950" class="pwr"/><path d="M1022 483 V582 H925" class="gnd"/>
+  <text x="795" y="505" class="tiny">+12 V → COM; NO → pump +</text><text x="945" y="510" class="tiny">pump − → supply −</text>
+  <text x="780" y="625" class="small" fill="#9b3b25">Conditional example only; actual field pump voltage/current and startup rating unknown.</text>
+  <text x="40" y="660" class="small">Never connect pump/load power to ESP32 GPIO. Confirm relay contact rating and pump nameplate before field use.</text>
+</svg>

@@ -167,6 +167,8 @@ app and when the AI farm agent can be added, is in [ROADMAP.md](ROADMAP.md).
 
 ## Status
 
+[![Firmware](https://github.com/Samir-Guenchi/smart-micro-farm-iot/actions/workflows/firmware.yml/badge.svg)](https://github.com/Samir-Guenchi/smart-micro-farm-iot/actions/workflows/firmware.yml)
+
 Early stage and moving. The coop door and solar camera are installed and
 working, the ESP32 boards are being programmed, and the dashboard integration is
 underway. Early conversations with farm operators and customers are confirming
