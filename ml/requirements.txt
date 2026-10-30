@@ -1,0 +1,7 @@
+numpy>=2
+pandas>=2
+scikit-learn>=1.5
+joblib>=1.4
+matplotlib>=3.8
+jupyter
+pytest>=8
