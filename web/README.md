@@ -60,9 +60,12 @@ need HTTPS (localhost is fine for testing).
 
 ## Translations and right-to-left
 
-All text is in `src/locales/en.json`; components never contain English strings.
-To add a language, translate that file to e.g. `ar.json` and register it in
-`src/i18n.ts` (French and Arabic are already listed and fall back to English).
+All text is in `src/locales/`: English (`en.json`), French (`fr.json`) and
+Arabic (`ar.json`); components never contain English strings. Arabic uses all
+six plural forms (`_zero`, `_one`, `_two`, `_few`, `_many`, `_other`), French
+`_one`, `_many` and `_other`. When you add a key to `en.json`, add it to the
+other files too: `src/locales.test.ts` fails if a key or placeholder is
+missing. A new language is a new locale file plus one line in `src/i18n.ts`.
 The `<html dir>` switches to `rtl` for Arabic, and the CSS uses logical
 properties (`margin-inline-start`, `inset-inline`…), so the layout mirrors
 without extra styles. Try it with `?lang=ar`.

@@ -1,0 +1,99 @@
+{
+  "app": {
+    "name": "GreenLoop Farm",
+    "offlineBanner": "Vous êtes hors ligne. Affichage des dernières données reçues.",
+    "demoBanner": "Mode démo : données simulées."
+  },
+  "nav": {
+    "overview": "Ferme",
+    "bed": "Planche",
+    "coop": "Poulailler",
+    "settings": "Réglages"
+  },
+  "login": {
+    "title": "Connexion",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "error": "Nom d'utilisateur ou mot de passe incorrect."
+  },
+  "common": {
+    "loading": "Chargement…",
+    "error": "Impossible de charger les données. Réessayez ou vérifiez la connexion.",
+    "retry": "Réessayer",
+    "online": "En ligne",
+    "offline": "Hors ligne",
+    "lastSeen": "Vu {{when}}",
+    "never": "jamais",
+    "justNow": "à l'instant",
+    "minutesAgo_one": "il y a {{count}} min",
+    "minutesAgo_many": "il y a {{count}} min",
+    "minutesAgo_other": "il y a {{count}} min",
+    "hoursAgo_one": "il y a {{count}} h",
+    "hoursAgo_many": "il y a {{count}} h",
+    "hoursAgo_other": "il y a {{count}} h",
+    "daysAgo_one": "il y a {{count}} jour",
+    "daysAgo_many": "il y a {{count}} jours",
+    "daysAgo_other": "il y a {{count}} jours"
+  },
+  "nodes": {
+    "irrigation-1": "Irrigation · Planche 1",
+    "hive-1": "Ruche 1",
+    "coop-1": "Poulailler"
+  },
+  "metrics": {
+    "soil_moisture_pct": "Humidité du sol",
+    "air_temp_c": "Température de l'air",
+    "air_humidity_pct": "Humidité de l'air",
+    "pump_on": "Pompe",
+    "water_liters": "Eau utilisée",
+    "hive_weight_kg": "Poids de la ruche",
+    "hive_temp_c": "Température de la ruche",
+    "battery_v": "Batterie"
+  },
+  "bed": {
+    "title": "Planche 1",
+    "history": "Humidité du sol, dernières {{hours}} h",
+    "range": "Période",
+    "hours": "{{count}} h",
+    "pump": "Pompe",
+    "pumpOn": "En marche",
+    "pumpOff": "Arrêtée",
+    "water": "Arroser maintenant",
+    "duration": "Durée",
+    "minutes_one": "{{count}} minute",
+    "minutes_many": "{{count}} minutes",
+    "minutes_other": "{{count}} minutes",
+    "confirm": "Arroser la planche 1 pendant {{minutes}} min ?",
+    "sent": "Arrosage lancé pour {{minutes}} min.",
+    "capped": "Limité à {{minutes}} min, la limite de sécurité.",
+    "failed": "Impossible de démarrer la pompe. Réessayez.",
+    "noData": "Aucune mesure sur cette période."
+  },
+  "coop": {
+    "title": "Poulailler",
+    "door": "Porte",
+    "open": "Ouverte",
+    "closed": "Fermée",
+    "unknown": "Inconnu",
+    "today": "Aujourd'hui",
+    "openedAt": "Ouverte à {{time}}",
+    "closedAt": "Fermée à {{time}}",
+    "noEventsToday": "Pas encore d'activité de la porte aujourd'hui.",
+    "since": "depuis {{time}}"
+  },
+  "settings": {
+    "title": "Réglages",
+    "language": "Langue",
+    "notifications": "Notifications",
+    "notificationsHelp": "Recevez les alertes de la ferme sur cet appareil, en plus de celles de Telegram.",
+    "enable": "Activer les notifications",
+    "enabled": "Les notifications sont activées sur cet appareil.",
+    "denied": "Les notifications sont bloquées dans les réglages du navigateur.",
+    "unsupported": "Ce navigateur ne gère pas les notifications push. Sur iPhone, ajoutez d'abord l'application à l'écran d'accueil.",
+    "notConfigured": "Les notifications push ne sont pas encore configurées sur le serveur.",
+    "install": "Installer l'application",
+    "installHelp": "Ajoutez GreenLoop à l'écran d'accueil pour l'ouvrir comme une application.",
+    "logout": "Se déconnecter"
+  }
+}

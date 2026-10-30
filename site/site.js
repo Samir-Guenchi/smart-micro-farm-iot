@@ -3,15 +3,47 @@
   var cfg = window.GREENLOOP || {};
   document.getElementById("year").textContent = new Date().getFullYear();
 
+  // Text the script writes, per page language (<html lang>). English is the fallback.
+  var TEXT = {
+    en: {
+      whatsappSent: "WhatsApp opened with your message. Press send there and we'll reply to confirm.",
+      emailSent: "Your email app opened with the message. Send it and we'll reply to confirm.",
+      noContact: "Online requests open soon. Until then, please contact us directly.",
+      openShop: "Open the farm shop →",
+      orderSubject: "Order from the website",
+      visitSubject: "Farm visit request",
+      name: "Name", contact: "Contact", items: "Items", details: "Details", visit: "Visit", date: "Date", people: "People",
+    },
+    fr: {
+      whatsappSent: "WhatsApp s'est ouvert avec votre message. Appuyez sur envoyer et nous vous répondrons pour confirmer.",
+      emailSent: "Votre messagerie s'est ouverte avec le message. Envoyez-le et nous vous répondrons pour confirmer.",
+      noContact: "Les demandes en ligne arrivent bientôt. En attendant, contactez-nous directement.",
+      openShop: "Ouvrir la boutique de la ferme →",
+      orderSubject: "Commande depuis le site",
+      visitSubject: "Demande de visite de la ferme",
+      name: "Nom", contact: "Contact", items: "Produits", details: "Détails", visit: "Visite", date: "Date", people: "Personnes",
+    },
+    ar: {
+      whatsappSent: "فُتح واتساب برسالتك. اضغط إرسال وسنرد عليك للتأكيد.",
+      emailSent: "فُتح تطبيق البريد برسالتك. أرسلها وسنرد عليك للتأكيد.",
+      noContact: "الطلبات عبر الإنترنت قريبًا. إلى ذلك الحين، تواصل معنا مباشرة.",
+      openShop: "افتح متجر المزرعة ←",
+      orderSubject: "طلب من الموقع",
+      visitSubject: "طلب زيارة المزرعة",
+      name: "الاسم", contact: "التواصل", items: "المنتجات", details: "التفاصيل", visit: "الزيارة", date: "التاريخ", people: "عدد الأشخاص",
+    },
+  };
+  var T = TEXT[(document.documentElement.lang || "en").slice(0, 2)] || TEXT.en;
+
   function sendMessage(subject, body, hintEl) {
     if (cfg.whatsapp) {
       window.open("https://wa.me/" + cfg.whatsapp + "?text=" + encodeURIComponent(subject + "\n\n" + body), "_blank", "noopener");
-      hintEl.textContent = "WhatsApp opened with your message. Press send there and we'll reply to confirm.";
+      hintEl.textContent = T.whatsappSent;
     } else if (cfg.email) {
       window.location.href = "mailto:" + cfg.email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-      hintEl.textContent = "Your email app opened with the message. Send it and we'll reply to confirm.";
+      hintEl.textContent = T.emailSent;
     } else {
-      hintEl.textContent = "Online requests open soon. Until then, please contact us directly.";
+      hintEl.textContent = T.noContact;
     }
   }
 
@@ -33,14 +65,14 @@
     a.className = "btn primary big";
     a.href = cfg.shopUrl;
     a.rel = "noopener";
-    a.textContent = "Open the farm shop →";
+    a.textContent = T.openShop;
     document.getElementById("shop-cta").appendChild(a);
   } else {
     orderForm.hidden = false;
     orderForm.addEventListener("submit", function (e) {
       e.preventDefault();
-      var body = formText(orderForm, [["name", "Name"], ["contact", "Contact"], ["items", "Items"], ["details", "Details"]]);
-      sendMessage("Order from the website", body, orderForm.querySelector("[data-hint]"));
+      var body = formText(orderForm, [["name", T.name], ["contact", T.contact], ["items", T.items], ["details", T.details]]);
+      sendMessage(T.orderSubject, body, orderForm.querySelector("[data-hint]"));
     });
   }
 
@@ -73,8 +105,8 @@
     visitForm.hidden = false;
     visitForm.addEventListener("submit", function (e) {
       e.preventDefault();
-      var body = formText(visitForm, [["name", "Name"], ["contact", "Contact"], ["type", "Visit"], ["date", "Date"], ["people", "People"]]);
-      sendMessage("Farm visit request", body, visitForm.querySelector("[data-hint]"));
+      var body = formText(visitForm, [["name", T.name], ["contact", T.contact], ["type", T.visit], ["date", T.date], ["people", T.people]]);
+      sendMessage(T.visitSubject, body, visitForm.querySelector("[data-hint]"));
     });
   }
 
