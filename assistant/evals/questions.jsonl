@@ -1,0 +1,22 @@
+{"id": "blight-1", "question": "My tomato leaves have brown-black patches after a week of rain. What is it and what do I do?", "expected_sources": ["tomato-late-blight"], "must_include": [["blight"], ["base", "drip", "overhead"]]}
+{"id": "ber-1", "question": "The bottoms of my tomatoes are black and leathery. Why?", "expected_sources": ["tomato-blossom-end-rot"], "must_include": [["blossom end rot", "calcium"], ["water"]]}
+{"id": "beetle-1", "question": "Striped yellow beetles are eating my potato plants.", "expected_sources": ["potato-colorado-beetle"], "must_include": [["colorado"], ["pick", "hand"]]}
+{"id": "aphid-1", "question": "Black insects are covering the tips of my broad beans.", "expected_sources": ["broad-bean-black-aphid"], "must_include": [["aphid"], ["pinch", "tip"]]}
+{"id": "slug-1", "question": "Something eats my lettuce seedlings overnight and leaves slime trails.", "expected_sources": ["slugs-in-vegetable-beds"], "must_include": [["slug"], ["morning", "torch", "night"]]}
+{"id": "bolt-1", "question": "My lettuce turns bitter and shoots up in summer. How do I stop it?", "expected_sources": ["lettuce-bolting"], "must_include": [["shade", "heat", "cool"]]}
+{"id": "compost-1", "question": "How do I compost chicken manure safely for my vegetable beds?", "expected_sources": ["composting-poultry-manure"], "must_include": [["straw", "brown", "carbon"], ["55", "60", "65", "hot"]]}
+{"id": "drip-1", "question": "How much water do tomatoes need per week on drip irrigation?", "expected_sources": ["drip-irrigation-schedule"], "must_include": [["20", "30"], ["mm", "litre", "liter", "l per"]]}
+{"id": "moisture-1", "question": "At what soil moisture reading should I start watering lettuce?", "expected_sources": ["soil-moisture-thresholds"], "must_include": [["30"]]}
+{"id": "pond-1", "question": "Can I use water from the fish pond in my drip lines?", "expected_sources": ["pond-water-fertigation"], "must_include": [["filter"]]}
+{"id": "mite-1", "question": "My hens have pale combs and I see tiny red specks under the perch at night.", "expected_sources": ["poultry-red-mite"], "must_include": [["mite"], ["diatomaceous", "clean", "scrub"]]}
+{"id": "quail-1", "question": "What protein level should quail feed have?", "expected_sources": ["quail-care"], "must_include": [["20", "22", "24", "28"]]}
+{"id": "winter-1", "question": "How do I keep my chickens healthy through a Latvian winter?", "expected_sources": ["poultry-winter-care"], "must_include": [["draught", "draft", "damp", "dry"]]}
+{"id": "varroa-1", "question": "When should I treat my beehives for varroa?", "expected_sources": ["varroa-treatment"], "must_include": [["harvest", "late summer", "august"], ["oxalic", "formic", "broodless", "winter"]]}
+{"id": "swarm-1", "question": "I found queen cells along the bottom of the frames. What should I do?", "expected_sources": ["swarm-prevention"], "must_include": [["swarm"], ["split", "space", "super"]]}
+{"id": "azolla-1", "question": "How much azolla can I feed my hens?", "expected_sources": ["azolla"], "must_include": [["10", "20"]]}
+{"id": "cal-lv-potato", "question": "When do I plant potatoes in Latvia?", "expected_sources": ["calendar"], "must_include": [["may"]]}
+{"id": "cal-dz-oct", "question": "What should I sow in Algeria in October?", "expected_sources": ["calendar"], "must_include": [["broad bean", "lettuce"]]}
+{"id": "fr-compost", "question": "Comment composter le fumier de poules ?", "expected_sources": ["composting-poultry-manure"], "must_include": [["paille", "carbone", "brun"]]}
+{"id": "ar-potato", "question": "متى أزرع البطاطا في الجزائر؟", "expected_sources": ["calendar"], "must_include": [["يناير", "جانفي", "فبراير", "فيفري", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر"]]}
+{"id": "idk-1", "question": "How do I fix the gearbox on my tractor?", "expected_sources": [], "must_include": [["i don't know"]]}
+{"id": "idk-2", "question": "What is the best price to sell truffles in Paris?", "expected_sources": [], "must_include": [["i don't know", "don't know"]]}
