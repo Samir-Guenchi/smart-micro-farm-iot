@@ -29,17 +29,21 @@ When the camera can be inspected, record only these non-secret details:
 | Motion snapshot or webhook capability | App event settings or documentation for the exact model |
 
 Do not add Wi-Fi passwords, cloud passwords, device serial numbers, or
-authenticated stream URLs to this repository. If credentials are required,
-keep them in deployment secrets and publish only a credential-free browser
-endpoint.
+authenticated stream URLs to this repository. Keep credentials in deployment
+secrets. Serve any browser-compatible stream only through an access-controlled
+dashboard or proxy; do not expose an unauthenticated public camera endpoint or
+put credentials or signed URLs in browser-visible configuration.
 
 ## Integration choices after identification
 
 - **RTSP or ONVIF available:** document the camera's supported stream and
   authentication mode, then restream it with go2rtc or MediaMTX to a
-  browser-compatible format for the dashboard. Connect motion events through
-  the model's documented API or an event bridge; publish the snapshot URL on
-  `greenloop/camera-1/event` with event type `motion`.
+  browser-compatible format for the dashboard. Serve that stream only through
+  an access-controlled dashboard or proxy. A separate event bridge could
+  publish snapshots from the model's documented motion API to
+  `greenloop/camera-1/event` with event type `motion`, as requested by issue
+  #18; verify the bridge and payload against the backend's MQTT and API
+  contracts before enabling it.
 - **Cloud-only with a usable vendor API:** document the API's event and
   snapshot support, terms, and subscription or hosting costs before adding an
   integration. Do not assume a cloud viewing app exposes an API.
