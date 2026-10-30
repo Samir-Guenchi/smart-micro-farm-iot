@@ -28,13 +28,13 @@ the link in `calLink`.
 ## Preview locally
 
 ```bash
-./site/build.sh && python3 -m http.server -d site/_site 8000
+./frontend/site/build.sh && python3 -m http.server -d frontend/site/_site 8000
 # open http://localhost:8000
 ```
 
 ## Publish
 
-The `pages` workflow deploys on every push to `main` that touches `site/` or
+The `pages` workflow deploys on every push to `main` that touches `frontend/site/` or
 `data/`. One-time setup: **Settings → Pages → Build and deployment → Source:
 GitHub Actions**. The site is then at
 `https://samir-guenchi.github.io/smart-micro-farm-iot/`.

@@ -1,7 +1,7 @@
 """Pick the language model provider: Claude (Anthropic) or NVIDIA's OpenAI-compatible API.
 
-The assistant and agent speak the Anthropic Messages shape. For NVIDIA, NvidiaClient
-translates that shape to OpenAI chat completions and back, so their code and
+The agent loop speaks the Anthropic Messages shape. For NVIDIA, NvidiaClient
+translates that shape to OpenAI chat completions and back, so the loop and the
 tests stay the same whichever provider runs.
 
   LLM_PROVIDER     anthropic | nvidia. Default: nvidia when NVIDIA_API_KEY is set
@@ -10,7 +10,7 @@ tests stay the same whichever provider runs.
   NVIDIA_MODEL     default meta/llama-3.3-70b-instruct
   NVIDIA_BASE_URL  default https://integrate.api.nvidia.com/v1
 
-This file is mirrored in agent/greenloop_agent/llm.py; keep both in sync.
+This file is mirrored in backend/assistant/greenloop_assistant/llm.py; keep both in sync.
 """
 from __future__ import annotations
 

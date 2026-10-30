@@ -177,11 +177,14 @@ the demand.
 ```
 firmware/    ESP32 firmware, one PlatformIO project per node (in review)
 hardware/    wiring diagrams, bill of materials, solar sizing (in review)
-backend/     MQTT broker, TimescaleDB, Grafana, ingest, REST API, Telegram alerts, weather rule
-web/         farm dashboard, an installable PWA
-site/        public landing page and crop calendar page (GitHub Pages)
-assistant/   AI farming assistant (answers from the knowledge base)
-agent/       farm agent: reads farm data, suggests actions, farmer approves
+frontend/              everything that runs in the browser
+  web/                 farm dashboard, an installable PWA
+  site/                public landing page and crop calendar page (GitHub Pages)
+backend/               everything that runs on a server
+  (services)           MQTT broker, TimescaleDB, Grafana, ingest, REST API, Telegram alerts, weather rule
+  assistant/           AI farming assistant (answers from the knowledge base)
+  agent/               farm agent: reads farm data, suggests actions, farmer approves
+api/, vercel.json      Vercel entry for the assistant (Vercel needs them at the root)
 ml/          soil-drying prediction model
 data/        crop calendar dataset
 knowledge/   farming notes for the assistant

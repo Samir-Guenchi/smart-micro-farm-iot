@@ -1,11 +1,11 @@
-"""GreenLoop farming assistant: answers questions from knowledge/ and the crop calendar."""
+"""GreenLoop farm agent v1: reads farm data, suggests actions, the farmer approves."""
 
 import os
 from pathlib import Path
 
 
 def load_env(path: Path | None = None) -> None:
-    """Read KEY=value lines from assistant/.env (if present) without overriding real env vars."""
+    """Read KEY=value lines from backend/agent/.env (if present) without overriding real env vars."""
     path = path or Path(__file__).resolve().parent.parent / ".env"
     if not path.exists():
         return

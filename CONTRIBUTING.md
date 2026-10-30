@@ -30,11 +30,12 @@ content/16-crop-calendar
 ```
 firmware/    PlatformIO projects, one per ESP32 node
 hardware/    wiring diagrams, BOM, solar sizing
-backend/     MQTT broker, database, ingest, API, alerts, weather rule
-web/         dashboard PWA
-site/        public landing page and crop calendar page (GitHub Pages)
-assistant/   AI farming assistant (knowledge only)
-agent/       farm agent (reads farm data, suggests, farmer approves)
+frontend/web/        dashboard PWA
+frontend/site/       public landing page and crop calendar page (GitHub Pages)
+backend/             MQTT broker, database, ingest, API, alerts, weather rule
+backend/assistant/   AI farming assistant (knowledge only)
+backend/agent/       farm agent (reads farm data, suggests, farmer approves)
+api/, vercel.json    Vercel entry for the assistant
 ml/          prediction models
 data/        crop calendar dataset
 knowledge/   knowledge base notes for the assistant

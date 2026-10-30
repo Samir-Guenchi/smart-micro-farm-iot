@@ -1,9 +1,9 @@
 # Farming assistant (knowledge only)
 
 A chat assistant that answers farming questions from the notes in
-[`knowledge/`](../knowledge) and the crop calendar in
-[`data/crop-calendar.json`](../data/crop-calendar.json). It has no access to
-sensor data; that is the farm agent's job (`agent/`, Phase 3).
+[`knowledge/`](../../knowledge) and the crop calendar in
+[`data/crop-calendar.json`](../../data/crop-calendar.json). It has no access to
+sensor data; that is the farm agent's job (`backend/agent/`, Phase 3).
 
 ```
 question ──► keyword search over knowledge/ ──┐
@@ -31,7 +31,7 @@ question ──► keyword search over knowledge/ ──┐
 ## Run it
 
 ```bash
-cd assistant
+cd backend/assistant
 python -m venv .venv && . .venv/bin/activate
 pip install -r requirements-dev.txt
 cp .env.example .env            # put NVIDIA_API_KEY or ANTHROPIC_API_KEY in .env (never commit it)
@@ -48,7 +48,7 @@ The chat page (`static/index.html`) is self-contained, so the dashboard can
 embed it later; set `window.ASSISTANT_API` to the service URL when it is served
 from another origin.
 
-By default it reads `../knowledge` and `../data/crop-calendar.json`. Point it
+By default it reads `../../knowledge` and `../../data/crop-calendar.json`. Point it
 elsewhere with `KNOWLEDGE_DIR` and `CROP_CALENDAR`; `sample-knowledge/` holds 5
 notes for quick experiments and tests.
 
@@ -68,4 +68,4 @@ something wrong.
 ## Deploy
 
 The assistant runs on Vercel as one serverless function; see
-[docs/deploy-vercel.md](../docs/deploy-vercel.md).
+[docs/deploy-vercel.md](../../docs/deploy-vercel.md).

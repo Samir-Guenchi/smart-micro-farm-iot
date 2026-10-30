@@ -6,20 +6,21 @@ two:
 
 | Part | Vercel? | Why |
 |---|---|---|
-| `web/` dashboard (PWA) | Yes | Static Vite build. |
-| `site/` landing page + crop calendar | Yes (or keep GitHub Pages) | Static files. |
-| `assistant/` farming chat (FastAPI) | Yes, as one function | Each question is one short request; it only reads `knowledge/` and `data/`. |
+| `frontend/web/` dashboard (PWA) | Yes | Static Vite build. |
+| `frontend/site/` landing page + crop calendar | Yes (or keep GitHub Pages) | Static files. |
+| `backend/assistant/` farming chat (FastAPI) | Yes, as one function | Each question is one short request; it only reads `knowledge/` and `data/`. |
 | `backend/` Mosquitto, TimescaleDB, ingest, alerts bot, Grafana | No | MQTT broker, database and ingest must run 24/7. Use a small VPS with `docker compose` (see `backend/README.md`). |
 | `backend/api` farm API | Not alone | It is serverless-friendly, but it needs the database and broker above; keep it next to them. |
-| `agent/` farm agent | No | `bot` polls Telegram forever; run it on the backend server. |
+| `backend/agent/` farm agent | No | `bot` polls Telegram forever; run it on the backend server. |
 
 Each Vercel part is its own Vercel **project** importing the same GitHub repo
-with a different **Root Directory**. Every folder has its own `vercel.json`.
+with a different **Root Directory**: `frontend/web`, `frontend/site`, and the
+repository root for the assistant. Every folder has its own `vercel.json`.
 
-## 1. Dashboard (`web/`)
+## 1. Dashboard (`frontend/web/`)
 
 1. Vercel → Add New → Project → import `smart-micro-farm-iot`.
-2. Root Directory: `web`. Framework: Vite (detected from `web/vercel.json`).
+2. Root Directory: `frontend/web`. Framework: Vite (detected from `frontend/web/vercel.json`).
 3. Environment variables:
    - Until the backend is online: `VITE_USE_MOCK=true` (demo data).
    - Once the farm API is hosted: `VITE_API_BASE=https://<your-api-host>` and
@@ -27,12 +28,14 @@ with a different **Root Directory**. Every folder has its own `vercel.json`.
    - Optional: `VITE_VAPID_PUBLIC_KEY` for web push.
 4. Deploy. The router uses `#/` URLs, so no rewrites are needed.
 
-## 2. Farming assistant (`assistant/` via `api/index.py`)
+## 2. Farming assistant (`backend/assistant/` via `api/index.py`)
 
 1. Add New → Project → same repo.
 2. Root Directory: **leave empty** (repository root). The function needs
    `knowledge/` and `data/`, so it is configured by the root `vercel.json`,
-   `api/index.py` and `requirements.txt`.
+   `api/index.py` and `requirements.txt`. These three files stay at the root
+   because Vercel only looks for functions in `api/` of the Root Directory;
+   `api/index.py` just imports the app from `backend/assistant/`.
 3. Environment variables (Production and Preview):
    - `NVIDIA_API_KEY` = your key from build.nvidia.com (or `ANTHROPIC_API_KEY`)
    - optional `NVIDIA_MODEL` (default `meta/llama-3.3-70b-instruct`)
@@ -41,10 +44,10 @@ with a different **Root Directory**. Every folder has its own `vercel.json`.
    `POST /api/assistant/chat` with `{"question": "..."}`.
    `GET /api/assistant/health` should list ~30 notes.
 
-## 3. Site (`site/`, optional)
+## 3. Site (`frontend/site/`, optional)
 
 GitHub Pages already publishes it (`.github/workflows/pages.yml`). To move it
-to Vercel: new project, Root Directory `site`; `site/vercel.json` runs
+to Vercel: new project, Root Directory `frontend/site`; `frontend/site/vercel.json` runs
 `build.sh` and serves `_site/`. Keep "Include files outside the root
 directory" on (the default) so `build.sh` can copy `data/`.
 

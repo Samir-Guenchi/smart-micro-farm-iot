@@ -10,7 +10,7 @@ from greenloop_assistant.knowledge import CropCalendar, KnowledgeBase, parse_fro
 
 HERE = Path(__file__).resolve().parent
 SAMPLE = HERE.parent / "sample-knowledge"
-CALENDAR = HERE.parents[1] / "data" / "crop-calendar.json"
+CALENDAR = HERE.parents[2] / "data" / "crop-calendar.json"
 
 
 class FakeClient:
@@ -42,7 +42,7 @@ def test_front_matter_parses_lists_and_strings():
 
 
 def test_full_knowledge_base_loads_and_skips_template():
-    kb = KnowledgeBase.load(HERE.parents[1] / "knowledge")
+    kb = KnowledgeBase.load(HERE.parents[2] / "knowledge")
     slugs = {n.slug for n in kb.notes}
     assert len(slugs) >= 30
     assert "_template" not in slugs and "README" not in slugs
