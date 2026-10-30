@@ -1,0 +1,30 @@
+{
+  "name": "soil_drying",
+  "version": 1,
+  "target": "hours until soil_moisture_pct < threshold without watering, capped at horizon_h",
+  "threshold": 25.0,
+  "horizon_h": 72,
+  "features": [
+    "moisture",
+    "moisture_above_threshold",
+    "slope_6h",
+    "slope_24h",
+    "drying_rate",
+    "hours_since_rewet",
+    "air_temp_c",
+    "air_humidity_pct",
+    "hour_sin",
+    "hour_cos",
+    "forecast_rain_24h",
+    "forecast_et0_24h"
+  ],
+  "trained_on": "simulator (soil_drying/simulate.py), seeds 1 (train) and 99 (test)",
+  "metrics": {
+    "mae_h_all": 9.21,
+    "mae_h_naive_all": 21.4,
+    "mae_h_next_24h": 5.71,
+    "mae_h_naive_next_24h": 23.71
+  },
+  "sklearn": "1.9.1",
+  "python": "3.13.17"
+}
