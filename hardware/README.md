@@ -176,6 +176,9 @@ not a complete farm system cost or a verification of the claim.
   pump nameplate and checking voltage, running and starting current, contact
   DC/AC rating, and load type. The priced 12 V DC / 10 A module is a conditional
   example, not confirmation of suitability.
+- **Flow meter:** verify its flow range, output circuit, voltage, flow direction,
+  and pressure rating. Calibrate pulses per liter using measured water on the
+  installed plumbing before using the reported totals for irrigation decisions.
 
 ## Reference wiring and pin assignments
 
@@ -190,6 +193,7 @@ shown below are for low-voltage logic and sensors only.
 | Function | ESP32 pin | Reference connection |
 | --- | --- | --- |
 | Soil probe analog output | GPIO34 / ADC34 | Probe AO to ADC34; power probe per its module rating |
+| Flow sensor pulse output | GPIO18 | Use a divider for a 5 V pulse output; never connect 5 V directly |
 | SHT31 I2C data | GPIO21 / SDA | SHT31 SDA |
 | SHT31 I2C clock | GPIO22 / SCL | SHT31 SCL |
 | Relay module control | GPIO26 | Relay IN only; use a compatible 3.3 V logic input |
@@ -201,6 +205,38 @@ example for a **12 V DC / 10 A load only**; the installed pump's rating is
 unknown and this example is not approved for it. Verify the actual pump
 nameplate, startup current, and relay/contact ratings before field connection.
 Do not connect mains voltage using this reference diagram.
+
+#### Irrigation flow measurement
+
+The reference firmware counts falling edges on GPIO18 while the pump runs. For
+a sensor with a 5 V pulse output, use a 10 kΩ series resistor from the signal
+to GPIO18 and a 15 kΩ resistor from GPIO18 to common GND. This divider produces
+about 3.0 V at GPIO18 from a 5 V high level. Power the flow sensor only within
+its own rating, connect its ground to ESP32 GND, and verify its output circuit
+and voltage first; do not connect a 5 V signal directly to an ESP32 GPIO. The
+divider's lower resistor also holds the input low when the signal is inactive.
+
+Install the meter inline after the pump and before the drip manifold, observe
+its marked flow direction, and keep the meter full of water. The [YF-S201
+reference manual](https://download.altronics.com.au/files/instructions_J0085.pdf)
+lists a 1–30 L/min operating range and up to 450 pulses/L. These are reference
+values, not a calibration for the farm. Drip systems can operate
+below that range; measure actual line flow and choose a suitable low-flow meter
+if needed. A strainer may be needed for pond-fed water, subject to the sensor's
+pressure and maintenance limits.
+
+To calibrate, route the installed meter's output to a known-volume container,
+run the pump under normal operating conditions, and record the counted pulses
+and collected liters. Set `FLOW_PULSES_PER_LITER` in
+`firmware/irrigation-node/include/config.h` to `pulse count / measured liters`;
+repeat with several measured volumes and use the aggregate ratio. Recheck after
+changing tubing, pump, filter, or operating pressure. Firmware starts at
+450 pulses/L. It reports the count for each pump run in the stopped event and
+persists the cumulative pulse count for the current UTC day in ESP32 NVS.
+Runs stopped before SNTP time is available are assigned to the day time sync
+first becomes valid; a run spanning midnight is assigned to the UTC day it
+stops. Thus the daily figure is a stopped-run total, not a pulse-by-pulse
+midnight split.
 
 ### Hive weighing and battery node
 
