@@ -69,10 +69,10 @@ flowchart LR
 
 | Component | Folder | What it does | Status (30 Oct 2026) |
 |---|---|---|---|
-| Irrigation node | `firmware/irrigation-node` | Soil moisture, air temperature and humidity; drives the pond-fed drip pump; waters automatically below threshold; obeys `pump` and `skip_auto_water` commands; hard 900 s pump cap | In review (PR #34) |
-| Hive node | `firmware/hive-node` | Hive weight (load cell), hive temperature, battery | In review (PR #34) |
-| Coop node | `firmware/coop-node` | Reed switch on the Okköbi door: reports `open`/`closed` on change | In review (PR #34) |
-| Hardware docs | `hardware/` | Wiring diagrams, BOM with prices, solar sizing | In review (PR #34) |
+| Irrigation node | `firmware/irrigation-node` | Soil moisture, air temperature and humidity, flow pulse measurement; drives the pond-fed drip pump; waters automatically below threshold; obeys `pump` and `skip_auto_water` commands; hard 900 s pump cap | Phase 0 merged; flow logging included |
+| Hive node | `firmware/hive-node` | Hive weight (load cell), hive temperature, battery | Phase 0 merged |
+| Coop node | `firmware/coop-node` | Reed switch on the Okköbi door: reports `open`/`closed` on change | Phase 0 merged |
+| Hardware docs | `hardware/` | Wiring diagrams, BOM with prices, solar sizing, flow sensor wiring and calibration | Phase 0 merged; flow reference included |
 | MQTT broker | `backend/mosquitto` | Mosquitto with username/password, no anonymous access | Merged |
 | Ingest | `backend/ingest` | Subscribes to `telemetry`, `status`, `event`; writes to TimescaleDB | Merged |
 | Database | `backend/db` | Postgres 16 + TimescaleDB; readings hypertable, events, node status | Merged |
@@ -88,13 +88,13 @@ flowchart LR
 | Farming assistant | `backend/assistant/` | Claude answers from `backend/knowledge/` and the calendar, with citations | Merged (prototype) |
 | Farm agent | `backend/agent/` | Claude with read tools over the API; suggests watering; farmer approves on Telegram | Merged (v1, mock data) |
 | Soil-drying model | `ml/` | Predicts hours until a bed needs water | Merged (trained on simulated data) |
-| Camera | | Live stream and motion snapshots | Not started (issue #18) |
+| Camera | | Live stream and motion snapshots | Model/app unverified; issue #18 remains open |
 
 ## Node responsibilities
 
 | Node id | Hardware | Publishes | Accepts on `cmd` |
 |---|---|---|---|
-| `irrigation-1` | ESP32, capacitive soil sensor, temperature/humidity sensor, relay to the drip pump | `soil_moisture_pct`, `air_temp_c`, `air_humidity_pct`, `pump_on`, `water_liters`, `battery_v`; `pump` events | `{"action": "pump", "duration_s": N}` (capped at 900), `{"action": "skip_auto_water", "until": <ts>}` (retained) |
+| `irrigation-1` | ESP32, capacitive soil sensor, temperature/humidity sensor, GPIO18 flow pulse input, relay to the drip pump | `soil_moisture_pct`, `air_temp_c`, `air_humidity_pct`, `pump_on`, UTC-day `water_liters`, `battery_v`; stopped `pump` events include run `water_liters` | `{"action": "pump", "duration_s": N}` (capped at 900), `{"action": "skip_auto_water", "until": <ts>}` (retained) |
 | `hive-1` | ESP32, load cell under the hive, temperature probe inside | `hive_weight_kg`, `hive_temp_c`, `battery_v` | nothing |
 | `coop-1` | ESP32, reed switch on the door | `battery_v`; `door` events | nothing (the door runs on its own light sensor) |
 
@@ -109,7 +109,7 @@ Node ids: `irrigation-1`, `hive-1`, `coop-1`.
 |---|---|---|
 | `greenloop/<node_id>/telemetry` | `{"ts": 1767225600, "metrics": {"soil_moisture_pct": 41.2, "air_temp_c": 18.5}}` | every 60 s, QoS 0 |
 | `greenloop/<node_id>/status` | `"online"` / `"offline"` | retained; `offline` is the MQTT last will |
-| `greenloop/<node_id>/event` | `{"ts": ..., "type": "door", "state": "closed"}` | on change, QoS 1 |
+| `greenloop/<node_id>/event` | `{"ts": ..., "type": "door", "state": "closed"}` or `{"ts": ..., "type": "pump", "state": "stopped", "reason": "manual", "water_liters": 1.2}` | on change or pump transition, QoS 1; stopped pump events include run volume |
 | `greenloop/<node_id>/cmd` | `{"action": "pump", "duration_s": 600}` | QoS 1, node replies with an `event` |
 
 Metric names: `soil_moisture_pct`, `air_temp_c`, `air_humidity_pct`, `pump_on` (0/1), `water_liters`, `hive_weight_kg`, `hive_temp_c`, `battery_v`.
@@ -120,6 +120,14 @@ Added since the roadmap, by the weather rule (#23): the retained
 pauses automatic watering (not manual pump commands) until `until`.
 
 `ts` is always unix seconds, UTC.
+
+For irrigation, `water_liters` in telemetry is the cumulative volume for the
+current UTC day, stored as pulse counts in ESP32 NVS. A pump `stopped` event
+reports the measured volume for that run. Runs stopped before SNTP time is
+available are retained in NVS as unassigned pulses and assigned to the UTC day
+when time sync first becomes valid; a run that crosses midnight is assigned to
+its stop day. Queued event timestamps are fixed at pump transition or first
+valid time sync, even if MQTT reconnects later.
 
 ## Shared API contract
 

@@ -2,9 +2,12 @@
 #include <ArduinoJson.h>
 #include <Adafruit_SHT31.h>
 #include <MQTTClient.h>
+#include <Preferences.h>
 #include <WiFi.h>
 #include <Wire.h>
 #include <esp_system.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/portmacro.h>
 #include <time.h>
 
 #include "secrets.h"
@@ -16,11 +19,25 @@ enum class PumpReason : uint8_t { Automatic, Manual, Timeout };
 struct PumpEvent {
   const char* state;
   PumpReason reason;
+  bool hasWaterLiters;
+  float waterLiters;
+  uint32_t timestamp;
+};
+
+struct DailyWaterRecord {
+  uint32_t utcDay;
+  uint32_t pulseCount;
+  uint32_t unassignedPulseCount;
+  uint32_t dayKnown;
 };
 
 WiFiClient networkClient;
 MQTTClient mqttClient(256);
 Adafruit_SHT31 sht31;
+Preferences dailyWaterPreferences;
+portMUX_TYPE flowPulseMux = portMUX_INITIALIZER_UNLOCKED;
+
+volatile uint32_t flowPulseCount = 0;
 
 bool sht31Available = false;
 bool pumpRunning = false;
@@ -29,9 +46,15 @@ bool telemetryDue = true;
 bool pendingPumpRequest = false;
 bool soilReadingAvailable = false;
 bool sntpRequested = false;
+bool dailyWaterPreferencesReady = false;
+bool dailyWaterDayKnown = false;
 uint32_t pendingPumpDurationS = 0;
 uint32_t pumpStartedAtMs = 0;
 uint32_t pumpDurationS = 0;
+uint32_t pumpStartedAtPulseCount = 0;
+uint32_t dailyWaterUtcDay = 0;
+uint32_t dailyWaterPulseCount = 0;
+uint32_t unassignedWaterPulseCount = 0;
 uint32_t lastSensorAtMs = 0;
 uint32_t lastTelemetryAtMs = 0;
 uint32_t lastMqttAttemptAtMs = 0;
@@ -44,6 +67,73 @@ PumpEvent pumpEventQueue[PUMP_EVENT_QUEUE_CAPACITY];
 float soilMoisturePct = 0.0F;
 float airTempC = NAN;
 float airHumidityPct = NAN;
+
+uint32_t unixTimestamp();
+bool timeSynchronized();
+
+void IRAM_ATTR countFlowPulse() {
+  portENTER_CRITICAL_ISR(&flowPulseMux);
+  ++flowPulseCount;
+  portEXIT_CRITICAL_ISR(&flowPulseMux);
+}
+
+uint32_t flowPulseCountSnapshot() {
+  portENTER_CRITICAL(&flowPulseMux);
+  const uint32_t pulseCount = flowPulseCount;
+  portEXIT_CRITICAL(&flowPulseMux);
+  return pulseCount;
+}
+
+bool persistDailyWater() {
+  if (!dailyWaterPreferencesReady) {
+    return false;
+  }
+  const DailyWaterRecord record = {dailyWaterUtcDay, dailyWaterPulseCount,
+                                   unassignedWaterPulseCount,
+                                   dailyWaterDayKnown ? 1UL : 0UL};
+  return dailyWaterPreferences.putBytes("water", &record, sizeof(record)) == sizeof(record);
+}
+
+void synchronizeDailyWaterDay(bool persistChanges = true) {
+  if (!timeSynchronized()) {
+    return;
+  }
+
+  const uint32_t utcDay = unixTimestamp() / 86400UL;
+  bool changed = false;
+  if (!dailyWaterDayKnown || dailyWaterUtcDay != utcDay) {
+    dailyWaterUtcDay = utcDay;
+    dailyWaterPulseCount = 0;
+    dailyWaterDayKnown = true;
+    changed = true;
+  }
+  if (unassignedWaterPulseCount > 0) {
+    dailyWaterPulseCount += unassignedWaterPulseCount;
+    unassignedWaterPulseCount = 0;
+    changed = true;
+  }
+  if (changed && persistChanges && !persistDailyWater()) {
+    Serial.println("Could not persist daily water total; keeping it in RAM.");
+  }
+}
+
+void recordWaterPulses(uint32_t pulseCount) {
+  if (pulseCount == 0) {
+    return;
+  }
+  if (timeSynchronized()) {
+    synchronizeDailyWaterDay(false);
+    dailyWaterPulseCount += pulseCount;
+    if (!persistDailyWater()) {
+      Serial.println("Could not persist daily water total; keeping it in RAM.");
+    }
+  } else {
+    unassignedWaterPulseCount += pulseCount;
+    if (!persistDailyWater()) {
+      Serial.println("Could not persist unsynchronized water pulses; keeping them in RAM.");
+    }
+  }
+}
 
 const char* reasonName(PumpReason reason) {
   switch (reason) {
@@ -91,7 +181,8 @@ float soilPercentFromAdc(int rawAdc) {
   return constrain(percent, 0.0F, 100.0F);
 }
 
-void enqueuePumpEvent(const char* state, PumpReason reason) {
+void enqueuePumpEvent(const char* state, PumpReason reason, bool hasWaterLiters = false,
+                      float waterLiters = 0.0F) {
   if (pumpEventCount == PUMP_EVENT_QUEUE_CAPACITY) {
     ++droppedPumpEventCount;
     Serial.printf("Pump event queue full; dropped newest event (%lu total).\n",
@@ -99,15 +190,32 @@ void enqueuePumpEvent(const char* state, PumpReason reason) {
     return;
   }
 
-  pumpEventQueue[pumpEventTail] = {state, reason};
+  const uint32_t eventTimestamp = timeSynchronized() ? unixTimestamp() : 0;
+  pumpEventQueue[pumpEventTail] =
+      {state, reason, hasWaterLiters, waterLiters, eventTimestamp};
   pumpEventTail = (pumpEventTail + 1) % PUMP_EVENT_QUEUE_CAPACITY;
   ++pumpEventCount;
+}
+
+void stampPendingPumpEventTimestamps() {
+  if (!timeSynchronized()) {
+    return;
+  }
+  const uint32_t timestamp = unixTimestamp();
+  uint8_t index = pumpEventHead;
+  for (uint8_t queued = 0; queued < pumpEventCount; ++queued) {
+    if (pumpEventQueue[index].timestamp == 0) {
+      pumpEventQueue[index].timestamp = timestamp;
+    }
+    index = (index + 1) % PUMP_EVENT_QUEUE_CAPACITY;
+  }
 }
 
 void flushPumpEvents() {
   if (!mqttClient.connected() || !timeSynchronized()) {
     return;
   }
+  stampPendingPumpEventTimestamps();
 
   while (pumpEventCount > 0) {
     const PumpEvent& event = pumpEventQueue[pumpEventHead];
@@ -115,7 +223,11 @@ void flushPumpEvents() {
     payload["type"] = "pump";
     payload["state"] = event.state;
     payload["reason"] = reasonName(event.reason);
-    if (!greenloop::publishEvent(mqttClient, NODE_ID, unixTimestamp(),
+    if (event.hasWaterLiters) {
+      payload["water_liters"] = event.waterLiters;
+    }
+    if (event.timestamp == 0 ||
+        !greenloop::publishEvent(mqttClient, NODE_ID, event.timestamp,
                                  payload.as<JsonObjectConst>())) {
       return;
     }
@@ -124,8 +236,9 @@ void flushPumpEvents() {
   }
 }
 
-void publishPumpEvent(const char* state, PumpReason reason) {
-  enqueuePumpEvent(state, reason);
+void publishPumpEvent(const char* state, PumpReason reason, bool hasWaterLiters = false,
+                      float waterLiters = 0.0F) {
+  enqueuePumpEvent(state, reason, hasWaterLiters, waterLiters);
   flushPumpEvents();
 }
 
@@ -136,6 +249,7 @@ bool startPump(uint32_t durationSeconds, PumpReason reason, uint32_t nowMs) {
 
   pumpDurationS = min(durationSeconds, MAX_PUMP_S);
   pumpStartedAtMs = nowMs;
+  pumpStartedAtPulseCount = flowPulseCountSnapshot();
   pumpRunning = true;
   writeRelay(true);
   publishPumpEvent("started", reason);
@@ -149,7 +263,10 @@ void stopPump(PumpReason reason) {
 
   writeRelay(false);
   pumpRunning = false;
-  publishPumpEvent("stopped", reason);
+  const uint32_t runPulseCount = flowPulseCountSnapshot() - pumpStartedAtPulseCount;
+  recordWaterPulses(runPulseCount);
+  publishPumpEvent("stopped", reason, true,
+                   static_cast<float>(runPulseCount) / FLOW_PULSES_PER_LITER);
 }
 
 void updatePump(uint32_t nowMs, float moisturePct) {
@@ -200,6 +317,9 @@ void publishTelemetry(uint32_t nowMs) {
     metrics["air_humidity_pct"] = airHumidityPct;
   }
   metrics["pump_on"] = pumpRunning;
+  synchronizeDailyWaterDay();
+  metrics["water_liters"] =
+      static_cast<float>(dailyWaterPulseCount) / FLOW_PULSES_PER_LITER;
   if (greenloop::publishTelemetry(mqttClient, NODE_ID, unixTimestamp(),
                                   metrics.as<JsonObjectConst>())) {
     lastTelemetryAtMs = nowMs;
@@ -258,7 +378,24 @@ void setup() {
   writeRelay(false);  // Preload the inactive level before enabling the relay output.
   pinMode(PUMP_RELAY_PIN, OUTPUT);
   pinMode(SOIL_SENSOR_PIN, INPUT);
+  pinMode(FLOW_SENSOR_PIN, INPUT);
   Serial.begin(115200);
+
+  if (dailyWaterPreferences.begin("greenloop", false)) {
+    dailyWaterPreferencesReady = true;
+    if (dailyWaterPreferences.getBytesLength("water") == sizeof(DailyWaterRecord)) {
+      DailyWaterRecord record = {};
+      if (dailyWaterPreferences.getBytes("water", &record, sizeof(record)) == sizeof(record)) {
+        dailyWaterUtcDay = record.utcDay;
+        dailyWaterPulseCount = record.pulseCount;
+        unassignedWaterPulseCount = record.unassignedPulseCount;
+        dailyWaterDayKnown = record.dayKnown != 0;
+      }
+    }
+  } else {
+    Serial.println("Could not open water-total storage; totals will stay in RAM.");
+  }
+  attachInterrupt(digitalPinToInterrupt(FLOW_SENSOR_PIN), countFlowPulse, FALLING);
 
   Wire.begin(I2C_SDA_PIN, I2C_SCL_PIN);
   sht31Available = sht31.begin(0x44);
@@ -284,11 +421,18 @@ void loop() {
     startPump(requestedDurationS, PumpReason::Manual, nowMs);
   }
 
-  if (WiFi.status() == WL_CONNECTED) {
+  const bool wifiConnected = WiFi.status() == WL_CONNECTED;
+  if (wifiConnected) {
     requestSntpTime(nowMs);
-    connectMqtt(nowMs);
   } else {
     sntpRequested = false;
+  }
+  // Assign pre-sync run pulses and queue timestamps as soon as valid time exists,
+  // even while MQTT is disconnected.
+  synchronizeDailyWaterDay();
+  stampPendingPumpEventTimestamps();
+  if (wifiConnected) {
+    connectMqtt(nowMs);
   }
   if (mqttClient.connected()) {
     mqttClient.loop();

@@ -25,9 +25,14 @@
 constexpr char NODE_ID[] = "irrigation-1";
 
 constexpr uint8_t SOIL_SENSOR_PIN = 34;
+constexpr uint8_t FLOW_SENSOR_PIN = 18;
 constexpr uint8_t I2C_SDA_PIN = 21;
 constexpr uint8_t I2C_SCL_PIN = 22;
 constexpr uint8_t PUMP_RELAY_PIN = 26;
+
+// Starting YF-S201 estimate; replace with the measured bucket-calibration result.
+constexpr float FLOW_PULSES_PER_LITER = 450.0F;
+static_assert(FLOW_PULSES_PER_LITER > 0.0F, "Flow calibration must be positive.");
 
 // Record the raw ADC readings with the probe dry and immersed at its final depth.
 constexpr int SOIL_ADC_DRY = 3000;
