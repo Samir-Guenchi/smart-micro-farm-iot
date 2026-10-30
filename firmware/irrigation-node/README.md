@@ -59,10 +59,11 @@ SNTP is configured while Wi-Fi is connected so telemetry and events use Unix
 seconds. Invalid SHT31 readings are omitted rather than serialized as `NaN`.
 Water volume is calculated from pulse count divided by
 `FLOW_PULSES_PER_LITER` (450 pulses/L is only the initial YF-S201 reference).
-The UTC-day pulse total is stored in ESP32 NVS. A run completed before time sync
-is assigned to the UTC day when SNTP first becomes valid; a run crossing UTC
-midnight is assigned to its stop day. Calibrate the installed sensor with a
-measured volume before relying on the values.
+The UTC-day pulse total is stored in ESP32 NVS. Runs completed before time sync
+are kept in NVS as unassigned pulses and added to the day when SNTP first
+becomes valid; a run crossing UTC midnight is assigned to its stop day.
+Calibrate the installed sensor with a measured volume before relying on the
+values.
 
 ## Build
 

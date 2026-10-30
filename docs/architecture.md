@@ -123,9 +123,11 @@ pauses automatic watering (not manual pump commands) until `until`.
 
 For irrigation, `water_liters` in telemetry is the cumulative volume for the
 current UTC day, stored as pulse counts in ESP32 NVS. A pump `stopped` event
-reports the measured volume for that run. A run stopped before SNTP time is
-available is assigned to the UTC day when time sync first becomes valid; a run
-that crosses midnight is assigned to its stop day.
+reports the measured volume for that run. Runs stopped before SNTP time is
+available are retained in NVS as unassigned pulses and assigned to the UTC day
+when time sync first becomes valid; a run that crosses midnight is assigned to
+its stop day. Queued event timestamps are fixed at pump transition or first
+valid time sync, even if MQTT reconnects later.
 
 ## Shared API contract
 

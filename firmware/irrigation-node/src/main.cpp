@@ -27,6 +27,8 @@ struct PumpEvent {
 struct DailyWaterRecord {
   uint32_t utcDay;
   uint32_t pulseCount;
+  uint32_t unassignedPulseCount;
+  uint32_t dayKnown;
 };
 
 WiFiClient networkClient;
@@ -83,14 +85,16 @@ uint32_t flowPulseCountSnapshot() {
 }
 
 bool persistDailyWater() {
-  if (!dailyWaterPreferencesReady || !dailyWaterDayKnown) {
+  if (!dailyWaterPreferencesReady) {
     return false;
   }
-  const DailyWaterRecord record = {dailyWaterUtcDay, dailyWaterPulseCount};
+  const DailyWaterRecord record = {dailyWaterUtcDay, dailyWaterPulseCount,
+                                   unassignedWaterPulseCount,
+                                   dailyWaterDayKnown ? 1UL : 0UL};
   return dailyWaterPreferences.putBytes("water", &record, sizeof(record)) == sizeof(record);
 }
 
-void synchronizeDailyWaterDay() {
+void synchronizeDailyWaterDay(bool persistChanges = true) {
   if (!timeSynchronized()) {
     return;
   }
@@ -108,7 +112,7 @@ void synchronizeDailyWaterDay() {
     unassignedWaterPulseCount = 0;
     changed = true;
   }
-  if (changed && !persistDailyWater()) {
+  if (changed && persistChanges && !persistDailyWater()) {
     Serial.println("Could not persist daily water total; keeping it in RAM.");
   }
 }
@@ -118,13 +122,16 @@ void recordWaterPulses(uint32_t pulseCount) {
     return;
   }
   if (timeSynchronized()) {
-    synchronizeDailyWaterDay();
+    synchronizeDailyWaterDay(false);
     dailyWaterPulseCount += pulseCount;
     if (!persistDailyWater()) {
       Serial.println("Could not persist daily water total; keeping it in RAM.");
     }
   } else {
     unassignedWaterPulseCount += pulseCount;
+    if (!persistDailyWater()) {
+      Serial.println("Could not persist unsynchronized water pulses; keeping them in RAM.");
+    }
   }
 }
 
@@ -190,10 +197,25 @@ void enqueuePumpEvent(const char* state, PumpReason reason, bool hasWaterLiters 
   ++pumpEventCount;
 }
 
+void stampPendingPumpEventTimestamps() {
+  if (!timeSynchronized()) {
+    return;
+  }
+  const uint32_t timestamp = unixTimestamp();
+  uint8_t index = pumpEventHead;
+  for (uint8_t queued = 0; queued < pumpEventCount; ++queued) {
+    if (pumpEventQueue[index].timestamp == 0) {
+      pumpEventQueue[index].timestamp = timestamp;
+    }
+    index = (index + 1) % PUMP_EVENT_QUEUE_CAPACITY;
+  }
+}
+
 void flushPumpEvents() {
   if (!mqttClient.connected() || !timeSynchronized()) {
     return;
   }
+  stampPendingPumpEventTimestamps();
 
   while (pumpEventCount > 0) {
     const PumpEvent& event = pumpEventQueue[pumpEventHead];
@@ -204,8 +226,8 @@ void flushPumpEvents() {
     if (event.hasWaterLiters) {
       payload["water_liters"] = event.waterLiters;
     }
-    const uint32_t eventTimestamp = event.timestamp == 0 ? unixTimestamp() : event.timestamp;
-    if (!greenloop::publishEvent(mqttClient, NODE_ID, eventTimestamp,
+    if (event.timestamp == 0 ||
+        !greenloop::publishEvent(mqttClient, NODE_ID, event.timestamp,
                                  payload.as<JsonObjectConst>())) {
       return;
     }
@@ -366,7 +388,8 @@ void setup() {
       if (dailyWaterPreferences.getBytes("water", &record, sizeof(record)) == sizeof(record)) {
         dailyWaterUtcDay = record.utcDay;
         dailyWaterPulseCount = record.pulseCount;
-        dailyWaterDayKnown = true;
+        unassignedWaterPulseCount = record.unassignedPulseCount;
+        dailyWaterDayKnown = record.dayKnown != 0;
       }
     }
   } else {
@@ -398,11 +421,18 @@ void loop() {
     startPump(requestedDurationS, PumpReason::Manual, nowMs);
   }
 
-  if (WiFi.status() == WL_CONNECTED) {
+  const bool wifiConnected = WiFi.status() == WL_CONNECTED;
+  if (wifiConnected) {
     requestSntpTime(nowMs);
-    connectMqtt(nowMs);
   } else {
     sntpRequested = false;
+  }
+  // Assign pre-sync run pulses and queue timestamps as soon as valid time exists,
+  // even while MQTT is disconnected.
+  synchronizeDailyWaterDay();
+  stampPendingPumpEventTimestamps();
+  if (wifiConnected) {
+    connectMqtt(nowMs);
   }
   if (mqttClient.connected()) {
     mqttClient.loop();
