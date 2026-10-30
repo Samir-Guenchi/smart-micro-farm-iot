@@ -94,6 +94,7 @@ framework = arduino
 monitor_speed = 115200
 lib_deps =
   GreenLoopMqtt=symlink://../common/greenloop-mqtt
+  256dpi/MQTT@2.4.6
   bblanchon/ArduinoJson@7.4.3
   adafruit/Adafruit SHT31 Library@2.2.2
 ```
@@ -134,6 +135,7 @@ framework = arduino
 monitor_speed = 115200
 lib_deps =
   GreenLoopMqtt=symlink://../common/greenloop-mqtt
+  256dpi/MQTT@2.4.6
   bblanchon/ArduinoJson@7.4.3
   adafruit/Adafruit SHT31 Library@2.2.2
   bogde/HX711@0.7.5
@@ -170,6 +172,7 @@ framework = arduino
 monitor_speed = 115200
 lib_deps =
   GreenLoopMqtt=symlink://../common/greenloop-mqtt
+  256dpi/MQTT@2.4.6
   bblanchon/ArduinoJson@7.4.3
 ```
 
