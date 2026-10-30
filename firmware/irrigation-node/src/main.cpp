@@ -255,8 +255,8 @@ void disconnectMqttForPlannedShutdown() {
 }
 
 void setup() {
+  writeRelay(false);  // Preload the inactive level before enabling the relay output.
   pinMode(PUMP_RELAY_PIN, OUTPUT);
-  writeRelay(false);  // Keep the relay de-energized before any network activity.
   pinMode(SOIL_SENSOR_PIN, INPUT);
   Serial.begin(115200);
 
