@@ -173,12 +173,24 @@ the demand.
 ## Repository layout
 
 ```
-assets/
-  brand/     logo and mark (SVG for light and dark, PNG exports, generator script)
-  images/    photos from the farm
-docs/        startup visa applications and the LIAA program guide
+firmware/    ESP32 firmware, one PlatformIO project per node (in review)
+hardware/    wiring diagrams, bill of materials, solar sizing (in review)
+backend/     MQTT broker, TimescaleDB, Grafana, ingest, REST API, Telegram alerts, weather rule
+web/         farm dashboard, an installable PWA
+site/        public landing page and crop calendar page (GitHub Pages)
+assistant/   AI farming assistant (answers from the knowledge base)
+agent/       farm agent: reads farm data, suggests actions, farmer approves
+ml/          soil-drying prediction model
+data/        crop calendar dataset
+knowledge/   farming notes for the assistant
+assets/      logo, mark and farm photos
+docs/        architecture, monthly progress log, startup visa documents
 ROADMAP.md   phased build plan for 2026–2028
 ```
+
+How the parts connect, and the MQTT and API contracts, are in
+[docs/architecture.md](docs/architecture.md). What has been done each month is
+in [docs/progress-log.md](docs/progress-log.md).
 
 ## The logo
 
