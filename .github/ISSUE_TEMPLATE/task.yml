@@ -1,0 +1,27 @@
+name: Task
+description: A piece of work from the roadmap
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should exist when this is done, and why.
+    validations:
+      required: true
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Checklist
+      value: |
+        - [ ] 
+  - type: textarea
+    id: deps
+    attributes:
+      label: Dependencies
+      description: What this needs from other tracks, and the contract or mock to work against meanwhile.
+      value: "**Independent:** can start now."
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Phase (see ROADMAP.md)
+      options: ["phase-0", "phase-1", "phase-2", "phase-3", "phase-4"]
