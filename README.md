@@ -204,3 +204,9 @@ experience.
 
 - Email: hinit.bth@gmail.com
 - LinkedIn: [linkedin.com/in/hinibth7](https://linkedin.com/in/hinibth7)
+
+## License
+
+Code is released under the [MIT License](LICENSE). Documentation, photos, the
+knowledge base and the crop calendar data are CC BY 4.0. See
+[CONTRIBUTING.md](CONTRIBUTING.md) to help build it.
