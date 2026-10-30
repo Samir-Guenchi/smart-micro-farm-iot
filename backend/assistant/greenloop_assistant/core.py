@@ -10,9 +10,9 @@ from . import llm
 from .llm import NotConfigured
 from .knowledge import COUNTRY_NAMES, MONTH_NAMES, CropCalendar, KnowledgeBase
 
-REPO = Path(__file__).resolve().parents[3]
-DEFAULT_KNOWLEDGE = REPO / "knowledge"
-DEFAULT_CALENDAR = REPO / "data" / "crop-calendar.json"
+BACKEND = Path(__file__).resolve().parents[2]
+DEFAULT_KNOWLEDGE = BACKEND / "knowledge"
+DEFAULT_CALENDAR = BACKEND / "data" / "crop-calendar.json"
 
 MODEL = os.environ.get("ASSISTANT_MODEL", "claude-opus-5-5")
 # Chat answers from a few short notes; low effort keeps replies fast and cheap.

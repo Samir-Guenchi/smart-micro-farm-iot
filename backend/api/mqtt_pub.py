@@ -18,5 +18,6 @@ class MqttPublisher:
             hostname=self.s.mqtt_host,
             port=self.s.mqtt_port,
             auth=auth,
+            tls={} if self.s.mqtt_tls else None,
             client_id="",
         )

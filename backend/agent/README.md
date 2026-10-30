@@ -37,8 +37,8 @@ OpenAI-compatible API: set `NVIDIA_API_KEY` (optionally `NVIDIA_MODEL`, default
 `meta/llama-3.3-70b-instruct`, which supports tool calls). `LLM_PROVIDER`
 forces one provider; see `greenloop_agent/llm.py`.
 
-The agent cannot run on Vercel: the `bot` command polls Telegram forever. Run
-it on the same small server as the backend (`docker compose` host or a VPS).
+The `bot` command polls Telegram forever, so it runs as a background worker
+(`greenloop-agent` in the root `render.yaml`) or on any always-on server.
 
 ## Run it
 

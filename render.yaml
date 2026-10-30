@@ -1,0 +1,187 @@
+# Render Blueprint for everything in backend/ (Render → New → Blueprint → this repo).
+# Render reads this file from the repository root; every service runs from backend/.
+# The browser side (frontend/) is hosted on Vercel, see docs/deploy.md.
+#
+# Not here, because Render only accepts HTTP traffic from outside:
+#   - the MQTT broker (Mosquitto): use a hosted broker such as HiveMQ Cloud (free, TLS on 8883)
+#     and fill in MQTT_HOST / MQTT_USER / MQTT_PASSWORD below.
+#   - Grafana: run it next to the database locally (backend/docker-compose.yml) or use Grafana Cloud.
+#
+# Plans: the two web services and the database can use the free plan (web services sleep after
+# 15 min idle; a free database expires after 30 days). Background workers have no free plan, so
+# they are on "starter"; delete the ones you don't need yet when Render shows the Blueprint.
+# Values marked "sync: false" are asked for when you create the Blueprint. Never commit them.
+
+databases:
+  - name: greenloop-db
+    plan: free
+    databaseName: greenloop
+    user: greenloop
+
+services:
+  # Farm REST API for the dashboard. Applies the database schema on every start.
+  - type: web
+    name: greenloop-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r api/requirements.txt
+    startCommand: python db/migrate.py && cd api && uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    buildFilter:
+      paths: ["api/**", "db/**"]
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: greenloop-db
+          property: connectionString
+      - key: API_SECRET_KEY
+        generateValue: true
+      - key: API_SERVICE_TOKEN
+        generateValue: true
+      - key: API_ADMIN_PASSWORD
+        sync: false
+      - key: CORS_ORIGINS # the Vercel dashboard URL, e.g. https://greenloop-web.vercel.app
+        sync: false
+      - key: MQTT_HOST
+        sync: false
+      - key: MQTT_PORT
+        value: "8883"
+      - key: MQTT_USER
+        sync: false
+      - key: MQTT_PASSWORD
+        sync: false
+
+  # Farming assistant: chat page at / and POST /api/assistant/chat.
+  - type: web
+    name: greenloop-assistant
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r assistant/requirements.txt
+    startCommand: cd assistant && uvicorn greenloop_assistant.server:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/assistant/health
+    buildFilter:
+      paths: ["assistant/**", "knowledge/**", "data/**"]
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: NVIDIA_API_KEY # or set ANTHROPIC_API_KEY instead
+        sync: false
+      - key: LLM_PROVIDER
+        value: nvidia
+      - key: CORS_ORIGINS # Vercel site URLs, only if a page there calls the assistant
+        sync: false
+
+  # MQTT → database writer.
+  - type: worker
+    name: greenloop-ingest
+    runtime: python
+    plan: starter
+    rootDir: backend
+    buildCommand: pip install -r ingest/requirements.txt
+    startCommand: python -u ingest/ingest.py
+    buildFilter:
+      paths: ["ingest/**"]
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: greenloop-db
+          property: connectionString
+      - key: MQTT_HOST
+        sync: false
+      - key: MQTT_PORT
+        value: "8883"
+      - key: MQTT_USER
+        sync: false
+      - key: MQTT_PASSWORD
+        sync: false
+
+  # Telegram alerts from MQTT messages.
+  - type: worker
+    name: greenloop-alerts
+    runtime: python
+    plan: starter
+    rootDir: backend
+    buildCommand: pip install -r alerts/requirements.txt
+    startCommand: cd alerts && python -u bot.py
+    buildFilter:
+      paths: ["alerts/**"]
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: MQTT_HOST
+        sync: false
+      - key: MQTT_PORT
+        value: "8883"
+      - key: MQTT_USER
+        sync: false
+      - key: MQTT_PASSWORD
+        sync: false
+
+  # Skip watering before rain (Open-Meteo forecast → pump command).
+  - type: worker
+    name: greenloop-weather
+    runtime: python
+    plan: starter
+    rootDir: backend
+    buildCommand: pip install -r weather/requirements.txt
+    startCommand: python -u weather/weather.py
+    buildFilter:
+      paths: ["weather/**"]
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: greenloop-db
+          property: connectionString
+      - key: FARM_LATITUDE
+        value: "56.95"
+      - key: FARM_LONGITUDE
+        value: "24.11"
+      - key: MQTT_HOST
+        sync: false
+      - key: MQTT_PORT
+        value: "8883"
+      - key: MQTT_USER
+        sync: false
+      - key: MQTT_PASSWORD
+        sync: false
+
+  # Farm agent: suggests watering, farmer approves on Telegram.
+  - type: worker
+    name: greenloop-agent
+    runtime: python
+    plan: starter
+    rootDir: backend
+    buildCommand: pip install -r agent/requirements.txt
+    startCommand: cd agent && python -m greenloop_agent bot
+    buildFilter:
+      paths: ["agent/**"]
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: API_BASE_URL # https://<greenloop-api>.onrender.com/api
+        sync: false
+      - key: API_TOKEN
+        fromService:
+          type: web
+          name: greenloop-api
+          envVarKey: API_SERVICE_TOKEN
+      - key: NVIDIA_API_KEY # or ANTHROPIC_API_KEY
+        sync: false
+      - key: LLM_PROVIDER
+        value: nvidia
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false

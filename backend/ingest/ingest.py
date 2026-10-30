@@ -152,6 +152,9 @@ def main():
 
     host = os.environ.get("MQTT_HOST", "localhost")
     port = int(os.environ.get("MQTT_PORT", "1883"))
+    # TLS for hosted brokers (HiveMQ Cloud, EMQX); on by default for port 8883.
+    if os.environ.get("MQTT_TLS", "").lower() in ("1", "true", "yes") or port == 8883:
+        client.tls_set()
     while True:
         try:
             client.connect(host, port, keepalive=60)

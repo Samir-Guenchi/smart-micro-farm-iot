@@ -87,7 +87,7 @@ The custom platform starts here. Grafana stays as the internal tool.
   login. Everything later (assistant, agent, apps) talks to this API, never to
   the database directly.
 - **Crop calendar:** a dataset (Latvia, Algeria, France, Sweden, Morocco × 12
-  months × crops) in `data/` and a page to browse it.
+  months × crops) in `backend/data/` and a page to browse it.
 - **Camera:** live stream in the dashboard if the camera exposes RTSP or ONVIF,
   and motion snapshots in alerts.
 - **Translations ready:** set up i18n in the web app now, even if only English
@@ -101,7 +101,7 @@ without opening Grafana or Telegram.
 This is when the **first AI piece** arrives.
 
 - **AI farming assistant:** a chat page in the web app backed by a large
-  language model, with retrieval over a curated knowledge base (`knowledge/`,
+  language model, with retrieval over a curated knowledge base (`backend/knowledge/`,
   markdown notes from the founder's expertise) and the crop calendar. It answers
   general questions: diseases, soil, companion planting, what to sow this month
   in a given country.

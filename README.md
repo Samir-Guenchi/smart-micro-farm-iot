@@ -177,17 +177,17 @@ the demand.
 ```
 firmware/    ESP32 firmware, one PlatformIO project per node (in review)
 hardware/    wiring diagrams, bill of materials, solar sizing (in review)
-frontend/              everything that runs in the browser
+frontend/              everything that runs in the browser (hosted on Vercel)
   web/                 farm dashboard, an installable PWA
-  site/                public landing page and crop calendar page (GitHub Pages)
-backend/               everything that runs on a server
+  site/                public landing page and crop calendar page
+backend/               everything that runs on a server (hosted on Render)
   (services)           MQTT broker, TimescaleDB, Grafana, ingest, REST API, Telegram alerts, weather rule
   assistant/           AI farming assistant (answers from the knowledge base)
   agent/               farm agent: reads farm data, suggests actions, farmer approves
-api/, vercel.json      Vercel entry for the assistant (Vercel needs them at the root)
+  knowledge/           farming notes for the assistant
+  data/                crop calendar dataset
+render.yaml            Render Blueprint for the backend
 ml/          soil-drying prediction model
-data/        crop calendar dataset
-knowledge/   farming notes for the assistant
 assets/      logo, mark and farm photos
 docs/        architecture, monthly progress log, startup visa documents
 ROADMAP.md   phased build plan for 2026–2028
@@ -195,7 +195,8 @@ ROADMAP.md   phased build plan for 2026–2028
 
 How the parts connect, and the MQTT and API contracts, are in
 [docs/architecture.md](docs/architecture.md). What has been done each month is
-in [docs/progress-log.md](docs/progress-log.md).
+in [docs/progress-log.md](docs/progress-log.md). Hosting (Render for the backend,
+Vercel for the frontend) is in [docs/deploy.md](docs/deploy.md).
 
 ## The logo
 

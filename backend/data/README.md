@@ -43,7 +43,7 @@ rows there are about keeping them in pots or a greenhouse.
 ### Checking changes
 
 ```
-python3 data/validate_crop_calendar.py
+python3 backend/data/validate_crop_calendar.py
 ```
 
 It checks the field names and allowed values, duplicate rows, and that every

@@ -1,10 +1,10 @@
 name: pages
 
-# Publishes frontend/site/ (landing page, crop calendar) and data/ to GitHub Pages.
+# Publishes frontend/site/ (landing page, crop calendar) and backend/data/ to GitHub Pages.
 on:
   push:
     branches: [main]
-    paths: ["frontend/site/**", "data/**", ".github/workflows/pages.yml"]
+    paths: ["frontend/site/**", "backend/data/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
 permissions:

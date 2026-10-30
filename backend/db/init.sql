@@ -1,5 +1,11 @@
--- Schema for GreenLoop Farm readings. Runs once, on the first start of the db container.
-CREATE EXTENSION IF NOT EXISTS timescaledb;
+-- Schema for GreenLoop Farm readings. Runs once, on the first start of the db container,
+-- and on every start of the API on Render (db/migrate.py). Safe to run again.
+-- TimescaleDB is used when available; on plain Postgres (e.g. Render) the tables stay normal tables.
+DO $$ BEGIN
+    CREATE EXTENSION IF NOT EXISTS timescaledb;
+EXCEPTION WHEN OTHERS THEN
+    RAISE NOTICE 'TimescaleDB not available, using plain tables';
+END $$;
 
 -- One row per metric per telemetry message (long format, so new metrics need no migration).
 CREATE TABLE IF NOT EXISTS telemetry (
@@ -8,7 +14,11 @@ CREATE TABLE IF NOT EXISTS telemetry (
     metric  TEXT             NOT NULL,
     value   DOUBLE PRECISION NOT NULL
 );
-SELECT create_hypertable('telemetry', 'ts', if_not_exists => TRUE);
+DO $$ BEGIN
+    IF EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'timescaledb') THEN
+        PERFORM create_hypertable('telemetry', 'ts', if_not_exists => TRUE);
+    END IF;
+END $$;
 CREATE INDEX IF NOT EXISTS telemetry_node_metric_ts ON telemetry (node, metric, ts DESC);
 
 -- Door, pump and motion events. Extra payload fields are kept in `data`.
@@ -20,7 +30,11 @@ CREATE TABLE IF NOT EXISTS events (
     reason  TEXT,
     data    JSONB       NOT NULL DEFAULT '{}'::jsonb
 );
-SELECT create_hypertable('events', 'ts', if_not_exists => TRUE);
+DO $$ BEGIN
+    IF EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'timescaledb') THEN
+        PERFORM create_hypertable('events', 'ts', if_not_exists => TRUE);
+    END IF;
+END $$;
 CREATE INDEX IF NOT EXISTS events_node_type_ts ON events (node, type, ts DESC);
 
 -- Latest online/offline status and last time anything was heard from each node.

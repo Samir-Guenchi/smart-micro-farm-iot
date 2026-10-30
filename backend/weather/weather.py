@@ -158,14 +158,18 @@ def publish(cfg, payload):
     import paho.mqtt.publish as mqtt_publish
 
     user = os.environ.get("MQTT_USER")
+    port = int(os.environ.get("MQTT_PORT", "1883"))
+    # TLS for hosted brokers (HiveMQ Cloud, EMQX); on by default for port 8883.
+    tls = os.environ.get("MQTT_TLS", "").lower() in ("1", "true", "yes") or port == 8883
     mqtt_publish.single(
         f"greenloop/{cfg.node}/cmd",
         json.dumps(payload),
         qos=1,
         retain=True,
         hostname=os.environ.get("MQTT_HOST", "localhost"),
-        port=int(os.environ.get("MQTT_PORT", "1883")),
+        port=port,
         auth={"username": user, "password": os.environ.get("MQTT_PASSWORD")} if user else None,
+        tls={} if tls else None,
     )
 
 

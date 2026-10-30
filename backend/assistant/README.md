@@ -1,8 +1,8 @@
 # Farming assistant (knowledge only)
 
 A chat assistant that answers farming questions from the notes in
-[`knowledge/`](../../knowledge) and the crop calendar in
-[`data/crop-calendar.json`](../../data/crop-calendar.json). It has no access to
+[`knowledge/`](../knowledge) and the crop calendar in
+[`data/crop-calendar.json`](../data/crop-calendar.json). It has no access to
 sensor data; that is the farm agent's job (`backend/agent/`, Phase 3).
 
 ```
@@ -48,7 +48,7 @@ The chat page (`static/index.html`) is self-contained, so the dashboard can
 embed it later; set `window.ASSISTANT_API` to the service URL when it is served
 from another origin.
 
-By default it reads `../../knowledge` and `../../data/crop-calendar.json`. Point it
+By default it reads `backend/knowledge` and `backend/data/crop-calendar.json`. Point it
 elsewhere with `KNOWLEDGE_DIR` and `CROP_CALENDAR`; `sample-knowledge/` holds 5
 notes for quick experiments and tests.
 
@@ -67,5 +67,6 @@ something wrong.
 
 ## Deploy
 
-The assistant runs on Vercel as one serverless function; see
-[docs/deploy-vercel.md](../../docs/deploy-vercel.md).
+The assistant runs on Render as a web service (`greenloop-assistant` in the
+root `render.yaml`); see [docs/deploy.md](../../docs/deploy.md). Set
+`CORS_ORIGINS` to the Vercel site URLs if a page there calls it.
