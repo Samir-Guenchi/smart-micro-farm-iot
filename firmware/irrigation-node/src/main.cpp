@@ -21,6 +21,7 @@ struct PumpEvent {
   PumpReason reason;
   bool hasWaterLiters;
   float waterLiters;
+  uint32_t timestamp;
 };
 
 struct DailyWaterRecord {
@@ -182,7 +183,9 @@ void enqueuePumpEvent(const char* state, PumpReason reason, bool hasWaterLiters 
     return;
   }
 
-  pumpEventQueue[pumpEventTail] = {state, reason, hasWaterLiters, waterLiters};
+  const uint32_t eventTimestamp = timeSynchronized() ? unixTimestamp() : 0;
+  pumpEventQueue[pumpEventTail] =
+      {state, reason, hasWaterLiters, waterLiters, eventTimestamp};
   pumpEventTail = (pumpEventTail + 1) % PUMP_EVENT_QUEUE_CAPACITY;
   ++pumpEventCount;
 }
@@ -201,7 +204,8 @@ void flushPumpEvents() {
     if (event.hasWaterLiters) {
       payload["water_liters"] = event.waterLiters;
     }
-    if (!greenloop::publishEvent(mqttClient, NODE_ID, unixTimestamp(),
+    const uint32_t eventTimestamp = event.timestamp == 0 ? unixTimestamp() : event.timestamp;
+    if (!greenloop::publishEvent(mqttClient, NODE_ID, eventTimestamp,
                                  payload.as<JsonObjectConst>())) {
       return;
     }

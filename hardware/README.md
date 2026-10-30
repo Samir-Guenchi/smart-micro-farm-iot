@@ -194,6 +194,7 @@ shown below are for low-voltage logic and sensors only.
 | --- | --- | --- |
 | Soil probe analog output | GPIO34 / ADC34 | Probe AO to ADC34; power probe per its module rating |
 | Flow sensor pulse output | GPIO18 | Use a divider for a 5 V pulse output; never connect 5 V directly |
+| Flow sensor supply | External regulated 5 V | Reference divider assumes 5 V sensor supply and a pulse high no greater than 5 V |
 | SHT31 I2C data | GPIO21 / SDA | SHT31 SDA |
 | SHT31 I2C clock | GPIO22 / SCL | SHT31 SCL |
 | Relay module control | GPIO26 | Relay IN only; use a compatible 3.3 V logic input |
@@ -208,13 +209,14 @@ Do not connect mains voltage using this reference diagram.
 
 #### Irrigation flow measurement
 
-The reference firmware counts falling edges on GPIO18 while the pump runs. For
-a sensor with a 5 V pulse output, use a 10 kΩ series resistor from the signal
-to GPIO18 and a 15 kΩ resistor from GPIO18 to common GND. This divider produces
-about 3.0 V at GPIO18 from a 5 V high level. Power the flow sensor only within
-its own rating, connect its ground to ESP32 GND, and verify its output circuit
-and voltage first; do not connect a 5 V signal directly to an ESP32 GPIO. The
-divider's lower resistor also holds the input low when the signal is inactive.
+The reference firmware counts falling edges on GPIO18 while the pump runs. The
+shown divider assumes a regulated 5 V sensor supply and a pulse high no greater
+than 5 V. Use a 10 kΩ series resistor from the signal to GPIO18 and a 15 kΩ
+resistor from GPIO18 to common GND; this produces about 3.0 V at GPIO18 from a
+5 V high level. Verify the actual sensor's output circuit and maximum voltage
+first. For a sensor with a higher signal voltage, recalculate the divider before
+connection; never apply 5 V directly to an ESP32 GPIO. The divider's lower
+resistor also holds the input low when the signal is inactive.
 
 Install the meter inline after the pump and before the drip manifold, observe
 its marked flow direction, and keep the meter full of water. The [YF-S201
