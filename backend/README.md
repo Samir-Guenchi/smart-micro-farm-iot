@@ -72,6 +72,12 @@ docker compose exec db psql -U greenloop -c \
 Tables: `telemetry` (one row per metric per message), `events` (door, pump,
 motion) and `node_status` (online/offline and last seen per node).
 
+## Run on Render
+
+The root [`render.yaml`](../render.yaml) Blueprint runs the API, the assistant,
+the workers (ingest, alerts, weather, agent) and a managed Postgres on Render,
+with a hosted MQTT broker instead of Mosquitto. Steps: [docs/deploy.md](../docs/deploy.md).
+
 ## Run on a small VPS
 
 A 1 vCPU / 1–2 GB VPS (Hetzner CX22, a DigitalOcean basic droplet or similar)

@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
@@ -19,6 +20,10 @@ load_env()
 STATIC = Path(__file__).resolve().parent.parent / "static"
 
 app = FastAPI(title="GreenLoop farming assistant")
+# Comma-separated origins allowed to call the API from a browser (e.g. the Vercel site).
+_origins = [o.strip() for o in os.environ.get("CORS_ORIGINS", "").split(",") if o.strip()]
+if _origins:
+    app.add_middleware(CORSMiddleware, allow_origins=_origins, allow_methods=["GET", "POST"], allow_headers=["Content-Type"])
 assistant = Assistant(
     Path(os.environ.get("KNOWLEDGE_DIR", DEFAULT_KNOWLEDGE)),
     Path(os.environ.get("CROP_CALENDAR", DEFAULT_CALENDAR)),

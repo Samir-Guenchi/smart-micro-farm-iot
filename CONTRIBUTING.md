@@ -35,10 +35,10 @@ frontend/site/       public landing page and crop calendar page (GitHub Pages)
 backend/             MQTT broker, database, ingest, API, alerts, weather rule
 backend/assistant/   AI farming assistant (knowledge only)
 backend/agent/       farm agent (reads farm data, suggests, farmer approves)
-api/, vercel.json    Vercel entry for the assistant
+backend/knowledge/   knowledge base notes for the assistant
+backend/data/        crop calendar dataset
+render.yaml          Render Blueprint for the backend
 ml/          prediction models
-data/        crop calendar dataset
-knowledge/   knowledge base notes for the assistant
 docs/        architecture, progress log
 ```
 

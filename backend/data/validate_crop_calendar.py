@@ -1,6 +1,6 @@
-"""Check data/crop-calendar.json against the schema in data/README.md.
+"""Check backend/data/crop-calendar.json against the schema in backend/data/README.md.
 
-Run from the repo root: python3 data/validate_crop_calendar.py
+Run from the repo root: python3 backend/data/validate_crop_calendar.py
 Exits non-zero and lists the problems if anything is wrong.
 """
 import json
@@ -53,7 +53,7 @@ def validate(rows):
 
 
 def main():
-    path = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "data/crop-calendar.json")
+    path = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "backend/data/crop-calendar.json")
     rows = json.loads(path.read_text(encoding="utf-8"))
     errors = validate(rows)
     for e in errors:

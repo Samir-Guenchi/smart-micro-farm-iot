@@ -35,6 +35,6 @@ the link in `calLink`.
 ## Publish
 
 The `pages` workflow deploys on every push to `main` that touches `frontend/site/` or
-`data/`. One-time setup: **Settings → Pages → Build and deployment → Source:
+`backend/data/`. One-time setup: **Settings → Pages → Build and deployment → Source:
 GitHub Actions**. The site is then at
 `https://samir-guenchi.github.io/smart-micro-farm-iot/`.

@@ -16,6 +16,8 @@ class Settings:
     mqtt_port: int = field(default_factory=lambda: int(os.environ.get("MQTT_PORT", "1883")))
     mqtt_user: str | None = field(default_factory=lambda: os.environ.get("MQTT_USER"))
     mqtt_password: str | None = field(default_factory=lambda: os.environ.get("MQTT_PASSWORD"))
+    # TLS is needed for hosted brokers (HiveMQ Cloud, EMQX); on by default for port 8883.
+    mqtt_tls: bool = field(default_factory=lambda: os.environ.get("MQTT_TLS", "").lower() in ("1", "true", "yes") or os.environ.get("MQTT_PORT") == "8883")
     admin_user: str = field(default_factory=lambda: os.environ.get("API_ADMIN_USER", "admin"))
     admin_password: str = field(default_factory=lambda: os.environ.get("API_ADMIN_PASSWORD", ""))
     # Signs login tokens. If unset, a random key is used and tokens stop working on restart.

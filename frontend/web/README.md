@@ -41,7 +41,9 @@ npm run preview        # serve dist/ locally
 ```
 
 `dist/` is plain static files with relative paths, so it can be served by nginx
-or Caddy on the VPS next to the API, or from any static host. Service workers
+or Caddy, or any static host. Production runs on Vercel (Root Directory
+`frontend/web`, `VITE_API_BASE` = the Render API URL); see
+[docs/deploy.md](../../docs/deploy.md). Service workers
 need HTTPS (localhost is fine for testing).
 
 ## PWA

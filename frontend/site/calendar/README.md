@@ -17,4 +17,4 @@ their code). Crop ids like `broad_bean` are shown as "Broad bean".
 
 **Preview:** from the repo root, `python3 -m http.server`, then open
 <http://localhost:8000/site/calendar/>. On GitHub Pages it is served at
-`/calendar/`, with `data/` copied next to it by the pages workflow.
+`/calendar/`, with `backend/data/` copied next to it as `data/` by `build.sh`.
