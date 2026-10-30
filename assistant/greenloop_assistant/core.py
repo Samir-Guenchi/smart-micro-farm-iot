@@ -1,4 +1,4 @@
-"""Answer a farming question from the knowledge base and crop calendar with Claude."""
+"""Answer a farming question from the knowledge base and crop calendar with Claude or an NVIDIA-hosted model."""
 from __future__ import annotations
 
 import datetime as dt
@@ -6,8 +6,8 @@ import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
-import anthropic
-
+from . import llm
+from .llm import NotConfigured
 from .knowledge import COUNTRY_NAMES, MONTH_NAMES, CropCalendar, KnowledgeBase
 
 REPO = Path(__file__).resolve().parents[2]
@@ -33,10 +33,6 @@ Answer only from the sources given in the user's message: farm knowledge notes a
 - Be short and practical: a direct answer first, then a few steps if useful. Plain language, no jargon.
 - Answer in the same language as the question (English, French or Arabic are the usual ones).
 - When advice depends on country or region and the farmer did not say where they are, say which region the advice is for."""
-
-
-class NotConfigured(RuntimeError):
-    """No Claude credentials found (ANTHROPIC_API_KEY or an `ant auth login` profile)."""
 
 
 @dataclass
@@ -65,7 +61,7 @@ class Assistant:
     @property
     def client(self):
         if self._client is None:
-            self._client = anthropic.Anthropic()
+            self._client = llm.make_client()
         return self._client
 
     def retrieve(self, question: str, today: dt.date | None = None):
@@ -115,7 +111,7 @@ class Assistant:
 
     def _create(self, question, lang, hits, cal_query, rows):
         return self.client.beta.messages.create(
-            model=MODEL,
+            model=llm.model_for(MODEL),
             max_tokens=16000,
             system=SYSTEM,
             output_config={"effort": EFFORT},

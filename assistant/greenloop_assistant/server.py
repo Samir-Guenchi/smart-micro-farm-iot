@@ -7,12 +7,11 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-import anthropic
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
-from . import load_env
+from . import llm, load_env
 from .core import DEFAULT_CALENDAR, DEFAULT_KNOWLEDGE, Assistant, NotConfigured
 
 load_env()
@@ -42,12 +41,13 @@ def health():
 
 @app.post("/api/assistant/chat")
 def chat(body: ChatIn):
+    auth_error, rate_limit_error, other_errors = llm.api_errors()
     try:
         answer = assistant.ask(body.question)
-    except (NotConfigured, anthropic.AuthenticationError):
-        raise HTTPException(503, "The assistant is not configured: set ANTHROPIC_API_KEY in .env.")
-    except anthropic.RateLimitError:
+    except (NotConfigured, auth_error):
+        raise HTTPException(503, "The assistant is not configured: set NVIDIA_API_KEY or ANTHROPIC_API_KEY in .env.")
+    except rate_limit_error:
         raise HTTPException(429, "The assistant is busy. Try again in a minute.")
-    except (anthropic.APIStatusError, anthropic.APIConnectionError):
+    except other_errors:
         raise HTTPException(502, "The assistant could not reach the language model. Try again.")
     return {"answer": answer.text, "sources": answer.sources}

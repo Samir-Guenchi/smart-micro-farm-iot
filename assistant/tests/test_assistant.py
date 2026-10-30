@@ -141,3 +141,14 @@ def test_eval_set_is_valid():
     assert len(items) >= 20
     for it in items:
         assert set(it) >= {"id", "question", "expected_sources", "must_include"}
+
+
+def test_nvidia_client_answers_in_the_same_shape():
+    from greenloop_assistant import llm
+
+    reply = SimpleNamespace(content="Water at the base [tomato-late-blight].", tool_calls=None)
+    fake = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(
+        create=lambda **kw: SimpleNamespace(choices=[SimpleNamespace(message=reply, finish_reason="stop")]))))
+    a = Assistant(SAMPLE, CALENDAR, client=llm.NvidiaClient(openai_client=fake))
+    answer = a.ask("My tomato leaves have brown patches after rain")
+    assert answer.used_llm and answer.sources[0]["slug"] == "tomato-late-blight"
