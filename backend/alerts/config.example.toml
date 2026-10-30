@@ -1,0 +1,30 @@
+# Copy to config.toml and adjust. Secrets (bot token, chat id, MQTT password)
+# come from environment variables, never from this file.
+
+[farm]
+# The farm's coordinates, used to compute sunset for the coop door alert.
+latitude = 56.95
+longitude = 24.11
+
+[dry_bed]
+# Alert when soil moisture stays below this for `minutes`.
+threshold_pct = 25.0
+minutes = 30
+# The alert clears once moisture is back above threshold_pct + clear_margin_pct.
+clear_margin_pct = 3.0
+
+[door]
+node = "coop-1"
+# Alert if the door is still open this long after sunset.
+minutes_after_sunset = 30
+
+[offline]
+# Alert when a node reports "offline" or sends nothing for this long.
+minutes = 10
+nodes = ["irrigation-1", "hive-1", "coop-1"]
+
+[pump]
+# Used when a pump start does not say how long it should run.
+max_minutes = 20
+# Extra time allowed on top of the requested duration before alerting.
+grace_minutes = 2
