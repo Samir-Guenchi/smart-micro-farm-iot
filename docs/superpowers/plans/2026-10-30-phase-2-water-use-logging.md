@@ -49,4 +49,4 @@
 ### Task 3: Verify the firmware and MQTT contract
 
 - [x] Confirm the architecture documentation describes `water_liters` in stopped events and daily telemetry.
-- [ ] Run the firmware workflow and confirm all PlatformIO projects build.
+- [x] Run the firmware workflow and confirm all PlatformIO projects build.
