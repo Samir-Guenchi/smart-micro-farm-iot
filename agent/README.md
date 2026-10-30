@@ -32,13 +32,21 @@ result or error) is appended to `data/decisions.jsonl`. That log is the record
 for "the agent's suggestions were right for a few months" before any autonomy
 is considered.
 
+The model is Claude by default, or any NVIDIA-hosted model through its
+OpenAI-compatible API: set `NVIDIA_API_KEY` (optionally `NVIDIA_MODEL`, default
+`meta/llama-3.3-70b-instruct`, which supports tool calls). `LLM_PROVIDER`
+forces one provider; see `greenloop_agent/llm.py`.
+
+The agent cannot run on Vercel: the `bot` command polls Telegram forever. Run
+it on the same small server as the backend (`docker compose` host or a VPS).
+
 ## Run it
 
 ```bash
 cd agent
 python -m venv .venv && . .venv/bin/activate
 pip install -r requirements-dev.txt
-cp .env.example .env     # fill in ANTHROPIC_API_KEY, API_TOKEN, TELEGRAM_*
+cp .env.example .env     # fill in NVIDIA_API_KEY or ANTHROPIC_API_KEY, API_TOKEN, TELEGRAM_*
 
 # Against a week of fake data (no backend needed; pump calls are only recorded)
 python -m greenloop_agent --mock ask "Which bed used the most water this week?"

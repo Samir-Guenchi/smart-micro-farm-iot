@@ -4,8 +4,7 @@ from __future__ import annotations
 import json
 import os
 
-import anthropic
-
+from . import llm
 from .tools import Suggestion, ToolError, Toolbox
 
 MODEL = os.environ.get("AGENT_MODEL", "claude-opus-5-5")
@@ -31,16 +30,17 @@ DAILY_CHECK = """Do the daily farm check now. Look at every node, the last 24-48
 
 
 class FarmAgent:
-    def __init__(self, farm, client=None, model: str = MODEL, effort: str = EFFORT):
+    def __init__(self, farm, client=None, model: str | None = None, effort: str = EFFORT):
         self.farm = farm
         self._client = client
-        self.model = model
+        # Resolved here, not at import, so a key loaded from .env picks the provider.
+        self.model = model or llm.model_for(MODEL)
         self.effort = effort
 
     @property
     def client(self):
         if self._client is None:
-            self._client = anthropic.Anthropic()
+            self._client = llm.make_client()
         return self._client
 
     def run(self, prompt: str, allow_suggestions: bool) -> tuple[str, list[Suggestion]]:
