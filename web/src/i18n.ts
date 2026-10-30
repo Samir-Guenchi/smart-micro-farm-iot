@@ -1,6 +1,8 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import ar from "./locales/ar.json";
 import en from "./locales/en.json";
+import fr from "./locales/fr.json";
 
 // Adding a language = adding a locale file here. Right-to-left is handled by `dir`.
 export const LANGUAGES = [
@@ -39,8 +41,7 @@ i18n.on("languageChanged", (lng) => {
 });
 
 i18n.use(initReactI18next).init({
-  // Only English ships for now; fr and ar fall back to it until translated (issue #26).
-  resources: { en: { translation: en } },
+  resources: { en: { translation: en }, fr: { translation: fr }, ar: { translation: ar } },
   lng: initialLanguage(),
   fallbackLng: "en",
   interpolation: { escapeValue: false },

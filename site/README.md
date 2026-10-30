@@ -5,6 +5,14 @@ the loop, produce, farm visits, photos and contact. No build step and no
 framework: `index.html`, `style.css`, `site.js`, and photos in `img/`
 (resized copies of `assets/images/`).
 
+## Languages
+
+English (`index.html`), French (`fr/index.html`) and Arabic (`ar/index.html`,
+right-to-left), with a language switch in the header. They share `style.css`,
+`site.js` (its few messages are translated in the `TEXT` table, chosen by the
+page's `lang`) and `config.js`. When you change the English page, make the same
+change in the other two. The crop calendar page is English only for now.
+
 ## Shop and bookings: ready-made tools, set in `config.js`
 
 | Setting | Empty (default) | Set |

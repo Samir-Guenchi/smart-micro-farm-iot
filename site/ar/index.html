@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>مزرعة GreenLoop</title>
+  <meta name="description" content="مزرعة صغيرة دائرية: خضر وبيض وعسل وحلزون، تُنتَج بالشمس وماء البركة ومستشعرات رخيصة. اطلب منتجاتنا أو احجز زيارة للمزرعة.">
+  <meta property="og:title" content="GreenLoop Farm">
+  <meta property="og:description" content="خضر وبيض وعسل وحلزون من مزرعة صغيرة ذكية ودائرية. متجر وزيارات للمزرعة.">
+  <meta property="og:image" content="../img/coop-door.jpg">
+  <meta name="theme-color" content="#24452B">
+  <link rel="icon" type="image/svg+xml" href="../img/greenloop-mark-light.svg">
+  <link rel="stylesheet" href="../style.css">
+  <script src="../config.js"></script>
+</head>
+<body>
+  <header class="nav">
+    <a href="#top" class="brand" aria-label="الصفحة الرئيسية لمزرعة GreenLoop">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="../img/greenloop-logo-dark.svg">
+        <img src="../img/greenloop-logo-light.svg" alt="GreenLoop Farm" height="40">
+      </picture>
+    </a>
+    <nav>
+      <a href="#loop">الدورة</a>
+      <a href="#shop">المتجر</a>
+      <a href="#visit">الزيارات</a>
+      <a href="../calendar/">تقويم المحاصيل</a>
+      <a href="#contact">اتصل بنا</a>
+      <span class="lang" aria-label="Language"><a href="../" lang="en" hreflang="en">EN</a> · <a href="../fr/" lang="fr" hreflang="fr">FR</a> · <a href="../ar/" lang="ar" hreflang="ar">العربية</a></span>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">مزرعة صغيرة ذكية</p>
+        <h1>مزرعة صغيرة يصبح فيها كل ناتج مدخلًا جديدًا.</h1>
+        <p class="lead">خضر وفواكه وبيض وعسل وحلزون، تُنتَج في دورة مغلقة وتراقبها مستشعرات رخيصة تعمل بالطاقة الشمسية.</p>
+        <div class="actions">
+          <a class="btn primary" href="#shop">اطلب من المزرعة</a>
+          <a class="btn" href="#visit">احجز زيارة</a>
+        </div>
+      </div>
+      <img class="hero-img" src="../img/coop-door.jpg" alt="الباب الآلي لقن الدجاج في المزرعة" width="506" height="900">
+    </section>
+
+    <section id="loop" class="band">
+      <h2>الدورة</h2>
+      <p class="section-lead">كل جزء من المزرعة يغذّي الجزء الذي يليه. لا شيء يخرج منها كنفايات.</p>
+      <ol class="loop">
+        <li><span class="ico">🐟</span><b>ماء بركة الأسماك</b> يصبح ريًا بالتنقيط للخضر والأشجار المثمرة.</li>
+        <li><span class="ico">🐔</span><b>روث الدواجن</b> يصبح سمادًا عضويًا للأحواض والبستان.</li>
+        <li><span class="ico">🥬</span><b>بقايا الخضر والتقليم</b> تصبح علفًا للحلزون والدواجن.</li>
+        <li><span class="ico">🌿</span><b>الأزولا من البركة</b> تصبح علفًا غنيًا بالبروتين وسمادًا أخضر.</li>
+        <li><span class="ico">🌽</span><b>الذرة المزروعة في المزرعة</b> تُطعم 50 دجاجة و80 طائر سمان.</li>
+        <li><span class="ico">🐝</span><b>10 خلايا نحل</b> تلقّح كل المحاصيل وتنتج العسل.</li>
+      </ol>
+    </section>
+
+    <section id="shop">
+      <h2>من المزرعة</h2>
+      <p class="section-lead">موسمية وبكميات صغيرة. اطلب مسبقًا واستلم من المزرعة، أو اسأل عن التوصيل.</p>
+      <div class="products">
+        <article class="product"><span class="ico big">🥔</span><h3>الخضر</h3><p>بطاطا وخس وطماطم وفول وذرة، تُقطف حسب الطلب.</p><p class="season">يونيو – أكتوبر</p></article>
+        <article class="product"><span class="ico big">🥚</span><h3>البيض</h3><p>بيض دجاج وسمان من طيور تربّى في الهواء الطلق وتتغذى على ذرة المزرعة.</p><p class="season">طوال السنة</p></article>
+        <article class="product"><span class="ico big">🍯</span><h3>العسل</h3><p>عسل خام من خلايانا العشر التي تلقّح البستان أيضًا.</p><p class="season">ابتداءً من أغسطس</p></article>
+        <article class="product"><span class="ico big">🐌</span><h3>الحلزون</h3><p>حلزون مربّى في المزرعة ومغذّى على بقايا الخضر، للمطاعم وللطبخ المنزلي.</p><p class="season">حسب الطلب</p></article>
+      </div>
+      <div id="shop-cta" class="cta-box">
+        <!-- Filled by site.js: a shop link if config.shopUrl is set, otherwise the order form below. -->
+        <form id="order-form" class="form" hidden>
+          <h3>قدّم طلبًا</h3>
+          <div class="row">
+            <label>الاسم<input name="name" required autocomplete="name"></label>
+            <label>الهاتف أو البريد الإلكتروني<input name="contact" required></label>
+          </div>
+          <fieldset class="checks">
+            <legend>ماذا تريد؟</legend>
+            <label><input type="checkbox" name="items" value="خضر"> خضر</label>
+            <label><input type="checkbox" name="items" value="بيض"> بيض</label>
+            <label><input type="checkbox" name="items" value="عسل"> عسل</label>
+            <label><input type="checkbox" name="items" value="حلزون"> حلزون</label>
+          </fieldset>
+          <label>الكميات ويوم الاستلام<textarea name="details" rows="3" placeholder="مثلًا: 2 كغ بطاطا، 12 بيضة، صباح السبت"></textarea></label>
+          <button class="btn primary" type="submit">أرسل الطلب</button>
+          <p class="hint" data-hint></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="visit" class="band">
+      <h2>زُر المزرعة</h2>
+      <p class="section-lead">شاهد مزرعة دائرية وهي تعمل: البركة، خلايا النحل، البستان والمستشعرات التي تديرها.</p>
+      <div class="visits">
+        <div class="visit"><h3>جولة مع مرشد</h3><p>حوالي 90 دقيقة حول الدورة كلها، مع تذوّق في النهاية.</p></div>
+        <div class="visit"><h3>يوم القطاف</h3><p>اقطف بنفسك خضر وفواكه الموسم وخذها معك.</p></div>
+        <div class="visit"><h3>وجبة في الهواء الطلق</h3><p>غداء ريفي مطبوخ مما ينمو هنا، للعائلات والمجموعات الصغيرة.</p></div>
+        <div class="visit"><h3>زيارات المدارس والفرق</h3><p>ورشات تطبيقية عن الغذاء والماء والزراعة الذكية للأقسام الدراسية وفرق الشركات الناشئة.</p></div>
+      </div>
+      <div id="booking" class="cta-box">
+        <!-- Filled by site.js: Cal.com embed if config.calLink is set, otherwise the request form. -->
+        <div id="cal-embed" hidden></div>
+        <form id="visit-form" class="form" hidden>
+          <h3>اطلب زيارة</h3>
+          <div class="row">
+            <label>الاسم<input name="name" required autocomplete="name"></label>
+            <label>الهاتف أو البريد الإلكتروني<input name="contact" required></label>
+          </div>
+          <div class="row">
+            <label>نوع الزيارة
+              <select name="type"><option>جولة مع مرشد</option><option>يوم القطاف</option><option>وجبة في الهواء الطلق</option><option>زيارة مدرسة أو فريق</option></select>
+            </label>
+            <label>التاريخ المفضّل<input type="date" name="date"></label>
+          </div>
+          <label>عدد الأشخاص<input type="number" name="people" min="1" value="2"></label>
+          <button class="btn primary" type="submit">أرسل الطلب</button>
+          <p class="hint" data-hint></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="smart">
+      <h2>تُدار من الهاتف</h2>
+      <p class="section-lead">أجهزة رخيصة تعمل بالطاقة الشمسية تراقب المزرعة، والتصاميم مفتوحة ليتمكّن صغار الفلاحين الآخرين من تكرارها.</p>
+      <div class="photos">
+        <figure><img src="../img/coop-door.jpg" alt="الباب الآلي لقن الدجاج" loading="lazy" width="506" height="900"><figcaption><b>باب القن الآلي.</b> يُفتح عند الشروق ويُغلق عند الغروب، فيدخل الدجاج قبل خروج الحيوانات المفترسة.</figcaption></figure>
+        <figure><img src="../img/solar-camera.jpg" alt="كاميرا مراقبة تعمل بالطاقة الشمسية" loading="lazy" width="506" height="900"><figcaption><b>كاميرا شمسية.</b> مستقلة عن الشبكة، مع رؤية ليلية، تغطي الدواجن والبستان والري.</figcaption></figure>
+        <figure><img src="../img/esp32-boards.jpg" alt="لوحات ESP32" loading="lazy" width="838" height="900"><figcaption><b>عُقد استشعار ESP32.</b> رطوبة التربة ومضخة التنقيط وخلايا النحل والباب، كلها مرتبطة بلوحة متابعة.</figcaption></figure>
+      </div>
+      <p><a href="https://github.com/Samir-Guenchi/smart-micro-farm-iot">شاهد الشيفرة والأجهزة مفتوحة المصدر ←</a></p>
+    </section>
+
+    <section id="contact" class="band">
+      <h2>اتصل بنا</h2>
+      <p class="section-lead">أسئلة، حلزون بالجملة، شراكات أو صحافة: تواصل معنا.</p>
+      <p id="contact-links" class="contact-links"></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year">2026</span> مزرعة GreenLoop · <a href="../calendar/">تقويم المحاصيل</a> · <a href="https://github.com/Samir-Guenchi/smart-micro-farm-iot">GitHub</a></p>
+  </footer>
+  <script src="../site.js"></script>
+</body>
+</html>

@@ -10,6 +10,8 @@
   watched over by cheap sensors and run from a phone.</b>
 </p>
 
+<p align="center">English · <a href="README.fr.md">Français</a> · <a href="README.ar.md">العربية</a></p>
+
 <p align="center">
   <a href="#the-loop">The loop</a> ·
   <a href="#on-the-farm-today">On the farm today</a> ·

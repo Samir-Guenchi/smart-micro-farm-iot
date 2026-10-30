@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GreenLoop Farm</title>
+  <meta name="description" content="Une petite ferme circulaire : légumes, œufs, miel et escargots, cultivés avec le soleil, l'eau de l'étang et des capteurs bon marché. Commandez des produits ou réservez une visite.">
+  <meta property="og:title" content="GreenLoop Farm">
+  <meta property="og:description" content="Légumes, œufs, miel et escargots d'une micro-ferme circulaire et connectée. Boutique et visites de la ferme.">
+  <meta property="og:image" content="../img/coop-door.jpg">
+  <meta name="theme-color" content="#24452B">
+  <link rel="icon" type="image/svg+xml" href="../img/greenloop-mark-light.svg">
+  <link rel="stylesheet" href="../style.css">
+  <script src="../config.js"></script>
+</head>
+<body>
+  <header class="nav">
+    <a href="#top" class="brand" aria-label="Accueil GreenLoop Farm">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="../img/greenloop-logo-dark.svg">
+        <img src="../img/greenloop-logo-light.svg" alt="GreenLoop Farm" height="40">
+      </picture>
+    </a>
+    <nav>
+      <a href="#loop">La boucle</a>
+      <a href="#shop">Boutique</a>
+      <a href="#visit">Visites</a>
+      <a href="../calendar/">Calendrier des cultures</a>
+      <a href="#contact">Contact</a>
+      <span class="lang" aria-label="Language"><a href="../" lang="en" hreflang="en">EN</a> · <a href="../fr/" lang="fr" hreflang="fr">FR</a> · <a href="../ar/" lang="ar" hreflang="ar">العربية</a></span>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">Micro-ferme connectée</p>
+        <h1>Une petite ferme où chaque déchet devient une ressource.</h1>
+        <p class="lead">Légumes, fruits, œufs, miel et escargots, produits en circuit fermé et surveillés par des capteurs bon marché alimentés par le soleil.</p>
+        <div class="actions">
+          <a class="btn primary" href="#shop">Commander à la ferme</a>
+          <a class="btn" href="#visit">Réserver une visite</a>
+        </div>
+      </div>
+      <img class="hero-img" src="../img/coop-door.jpg" alt="La porte automatique du poulailler" width="506" height="900">
+    </section>
+
+    <section id="loop" class="band">
+      <h2>La boucle</h2>
+      <p class="section-lead">Chaque partie de la ferme nourrit la suivante. Rien ne part en déchet.</p>
+      <ol class="loop">
+        <li><span class="ico">🐟</span>L'<b>eau de l'étang à poissons</b> irrigue au goutte-à-goutte les légumes et les arbres fruitiers.</li>
+        <li><span class="ico">🐔</span>Le <b>fumier de volaille</b> devient du compost pour les planches et le verger.</li>
+        <li><span class="ico">🥬</span>Les <b>épluchures et tailles</b> nourrissent les escargots et les volailles.</li>
+        <li><span class="ico">🌿</span>L'<b>azolla de l'étang</b> devient aliment riche en protéines et engrais vert.</li>
+        <li><span class="ico">🌽</span>Le <b>maïs cultivé sur place</b> nourrit 50 poules et 80 cailles.</li>
+        <li><span class="ico">🐝</span><b>10 ruches</b> pollinisent toutes les cultures et produisent du miel.</li>
+      </ol>
+    </section>
+
+    <section id="shop">
+      <h2>Produits de la ferme</h2>
+      <p class="section-lead">De saison et en petites quantités. Commandez à l'avance et retirez à la ferme, ou renseignez-vous sur la livraison.</p>
+      <div class="products">
+        <article class="product"><span class="ico big">🥔</span><h3>Légumes</h3><p>Pommes de terre, laitues, tomates, fèves et maïs, récoltés à la commande.</p><p class="season">Juin – octobre</p></article>
+        <article class="product"><span class="ico big">🥚</span><h3>Œufs</h3><p>Œufs de poules et de cailles élevées en plein air, nourries au maïs de la ferme.</p><p class="season">Toute l'année</p></article>
+        <article class="product"><span class="ico big">🍯</span><h3>Miel</h3><p>Miel cru de nos 10 ruches, qui pollinisent aussi le verger.</p><p class="season">À partir d'août</p></article>
+        <article class="product"><span class="ico big">🐌</span><h3>Escargots</h3><p>Escargots élevés à la ferme et nourris de restes de légumes, pour les restaurants et les particuliers.</p><p class="season">Sur demande</p></article>
+      </div>
+      <div id="shop-cta" class="cta-box">
+        <!-- Filled by site.js: a shop link if config.shopUrl is set, otherwise the order form below. -->
+        <form id="order-form" class="form" hidden>
+          <h3>Passer commande</h3>
+          <div class="row">
+            <label>Nom<input name="name" required autocomplete="name"></label>
+            <label>Téléphone ou e-mail<input name="contact" required></label>
+          </div>
+          <fieldset class="checks">
+            <legend>Que souhaitez-vous ?</legend>
+            <label><input type="checkbox" name="items" value="Légumes"> Légumes</label>
+            <label><input type="checkbox" name="items" value="Œufs"> Œufs</label>
+            <label><input type="checkbox" name="items" value="Miel"> Miel</label>
+            <label><input type="checkbox" name="items" value="Escargots"> Escargots</label>
+          </fieldset>
+          <label>Quantités et jour de retrait<textarea name="details" rows="3" placeholder="ex. 2 kg de pommes de terre, 12 œufs, samedi matin"></textarea></label>
+          <button class="btn primary" type="submit">Envoyer la commande</button>
+          <p class="hint" data-hint></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="visit" class="band">
+      <h2>Visiter la ferme</h2>
+      <p class="section-lead">Découvrez une ferme circulaire en action : l'étang, les ruches, le verger et les capteurs qui la pilotent.</p>
+      <div class="visits">
+        <div class="visit"><h3>Visite guidée</h3><p>Environ 90 minutes autour de toute la boucle, avec une dégustation à la fin.</p></div>
+        <div class="visit"><h3>Journée cueillette</h3><p>Cueillez vous-même légumes et fruits de saison et repartez avec.</p></div>
+        <div class="visit"><h3>Repas en plein air</h3><p>Un déjeuner fermier cuisiné avec les produits d'ici, pour les familles et les petits groupes.</p></div>
+        <div class="visit"><h3>Écoles et équipes</h3><p>Ateliers pratiques sur l'alimentation, l'eau et l'agriculture connectée pour les classes et les équipes de startups.</p></div>
+      </div>
+      <div id="booking" class="cta-box">
+        <!-- Filled by site.js: Cal.com embed if config.calLink is set, otherwise the request form. -->
+        <div id="cal-embed" hidden></div>
+        <form id="visit-form" class="form" hidden>
+          <h3>Demander une visite</h3>
+          <div class="row">
+            <label>Nom<input name="name" required autocomplete="name"></label>
+            <label>Téléphone ou e-mail<input name="contact" required></label>
+          </div>
+          <div class="row">
+            <label>Type de visite
+              <select name="type"><option>Visite guidée</option><option>Journée cueillette</option><option>Repas en plein air</option><option>École ou équipe</option></select>
+            </label>
+            <label>Date souhaitée<input type="date" name="date"></label>
+          </div>
+          <label>Nombre de personnes<input type="number" name="people" min="1" value="2"></label>
+          <button class="btn primary" type="submit">Envoyer la demande</button>
+          <p class="hint" data-hint></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="smart">
+      <h2>Pilotée depuis un téléphone</h2>
+      <p class="section-lead">Du matériel bon marché alimenté par le soleil veille sur la ferme, et les plans sont ouverts pour que d'autres petits agriculteurs puissent les reproduire.</p>
+      <div class="photos">
+        <figure><img src="../img/coop-door.jpg" alt="Porte automatique du poulailler" loading="lazy" width="506" height="900"><figcaption><b>Porte automatique du poulailler.</b> Elle s'ouvre au lever du soleil et se ferme au coucher, pour que les poules soient rentrées avant les prédateurs.</figcaption></figure>
+        <figure><img src="../img/solar-camera.jpg" alt="Caméra de surveillance solaire" loading="lazy" width="506" height="900"><figcaption><b>Caméra solaire.</b> Autonome, avec vision nocturne, elle surveille les volailles, le verger et l'irrigation.</figcaption></figure>
+        <figure><img src="../img/esp32-boards.jpg" alt="Cartes ESP32" loading="lazy" width="838" height="900"><figcaption><b>Capteurs ESP32.</b> Humidité du sol, pompe goutte-à-goutte, ruches et porte, reliés à un tableau de bord.</figcaption></figure>
+      </div>
+      <p><a href="https://github.com/Samir-Guenchi/smart-micro-farm-iot">Voir le code et le matériel open source →</a></p>
+    </section>
+
+    <section id="contact" class="band">
+      <h2>Contact</h2>
+      <p class="section-lead">Questions, escargots en gros, partenariats ou presse : contactez-nous.</p>
+      <p id="contact-links" class="contact-links"></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year">2026</span> GreenLoop Farm · <a href="../calendar/">Calendrier des cultures</a> · <a href="https://github.com/Samir-Guenchi/smart-micro-farm-iot">GitHub</a></p>
+  </footer>
+  <script src="../site.js"></script>
+</body>
+</html>

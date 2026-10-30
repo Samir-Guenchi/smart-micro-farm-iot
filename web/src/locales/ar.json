@@ -1,0 +1,111 @@
+{
+  "app": {
+    "name": "مزرعة GreenLoop",
+    "offlineBanner": "أنت غير متصل بالإنترنت. نعرض آخر البيانات المستلمة.",
+    "demoBanner": "وضع العرض: بيانات تجريبية."
+  },
+  "nav": {
+    "overview": "المزرعة",
+    "bed": "الحوض",
+    "coop": "القن",
+    "settings": "الإعدادات"
+  },
+  "login": {
+    "title": "تسجيل الدخول",
+    "username": "اسم المستخدم",
+    "password": "كلمة المرور",
+    "submit": "دخول",
+    "error": "اسم المستخدم أو كلمة المرور غير صحيحة."
+  },
+  "common": {
+    "loading": "جارٍ التحميل…",
+    "error": "تعذّر تحميل البيانات. أعد المحاولة أو تحقّق من الاتصال.",
+    "retry": "إعادة المحاولة",
+    "online": "متصل",
+    "offline": "غير متصل",
+    "lastSeen": "آخر ظهور {{when}}",
+    "never": "أبدًا",
+    "justNow": "الآن",
+    "minutesAgo_zero": "منذ {{count}} دقيقة",
+    "minutesAgo_one": "منذ دقيقة",
+    "minutesAgo_two": "منذ دقيقتين",
+    "minutesAgo_few": "منذ {{count}} دقائق",
+    "minutesAgo_many": "منذ {{count}} دقيقة",
+    "minutesAgo_other": "منذ {{count}} دقيقة",
+    "hoursAgo_zero": "منذ {{count}} ساعة",
+    "hoursAgo_one": "منذ ساعة",
+    "hoursAgo_two": "منذ ساعتين",
+    "hoursAgo_few": "منذ {{count}} ساعات",
+    "hoursAgo_many": "منذ {{count}} ساعة",
+    "hoursAgo_other": "منذ {{count}} ساعة",
+    "daysAgo_zero": "منذ {{count}} يوم",
+    "daysAgo_one": "منذ يوم",
+    "daysAgo_two": "منذ يومين",
+    "daysAgo_few": "منذ {{count}} أيام",
+    "daysAgo_many": "منذ {{count}} يومًا",
+    "daysAgo_other": "منذ {{count}} يوم"
+  },
+  "nodes": {
+    "irrigation-1": "الري · الحوض 1",
+    "hive-1": "خلية النحل 1",
+    "coop-1": "قن الدجاج"
+  },
+  "metrics": {
+    "soil_moisture_pct": "رطوبة التربة",
+    "air_temp_c": "حرارة الهواء",
+    "air_humidity_pct": "رطوبة الهواء",
+    "pump_on": "المضخة",
+    "water_liters": "الماء المستهلك",
+    "hive_weight_kg": "وزن الخلية",
+    "hive_temp_c": "حرارة الخلية",
+    "battery_v": "البطارية"
+  },
+  "bed": {
+    "title": "الحوض 1",
+    "history": "رطوبة التربة، آخر {{hours}} ساعة",
+    "range": "المدة",
+    "hours": "{{count}} ساعة",
+    "pump": "المضخة",
+    "pumpOn": "تعمل",
+    "pumpOff": "متوقفة",
+    "water": "اسقِ الآن",
+    "duration": "المدة",
+    "minutes_zero": "{{count}} دقيقة",
+    "minutes_one": "دقيقة واحدة",
+    "minutes_two": "دقيقتان",
+    "minutes_few": "{{count}} دقائق",
+    "minutes_many": "{{count}} دقيقة",
+    "minutes_other": "{{count}} دقيقة",
+    "confirm": "سقي الحوض 1 لمدة {{minutes}} دقيقة؟",
+    "sent": "بدأ السقي لمدة {{minutes}} دقيقة.",
+    "capped": "تم تحديد المدة بـ {{minutes}} دقيقة، وهو حد الأمان.",
+    "failed": "تعذّر تشغيل المضخة. حاول مرة أخرى.",
+    "noData": "لا توجد قراءات في هذه الفترة."
+  },
+  "coop": {
+    "title": "قن الدجاج",
+    "door": "الباب",
+    "open": "مفتوح",
+    "closed": "مغلق",
+    "unknown": "غير معروف",
+    "today": "اليوم",
+    "openedAt": "فُتح الساعة {{time}}",
+    "closedAt": "أُغلق الساعة {{time}}",
+    "noEventsToday": "لا نشاط للباب اليوم حتى الآن.",
+    "since": "منذ {{time}}"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "language": "اللغة",
+    "notifications": "الإشعارات",
+    "notificationsHelp": "استلم تنبيهات المزرعة على هذا الجهاز، إلى جانب تنبيهات تيليغرام.",
+    "enable": "تفعيل الإشعارات",
+    "enabled": "الإشعارات مفعّلة على هذا الجهاز.",
+    "denied": "الإشعارات محظورة في إعدادات المتصفح.",
+    "unsupported": "هذا المتصفح لا يدعم الإشعارات. على الآيفون، أضف التطبيق إلى الشاشة الرئيسية أولًا.",
+    "notConfigured": "الإشعارات غير مهيّأة على الخادم بعد.",
+    "install": "تثبيت التطبيق",
+    "installHelp": "أضف GreenLoop إلى الشاشة الرئيسية لفتحه كتطبيق.",
+    "logout": "تسجيل الخروج"
+  }
+}
