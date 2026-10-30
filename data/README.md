@@ -3,7 +3,7 @@
 ## `crop-calendar.json`
 
 What to sow, plant, prune, prepare or harvest, by country and month. It feeds
-the crop calendar page (`site/calendar/`) and the AI farming assistant.
+the crop calendar page (`frontend/site/calendar/`) and the AI farming assistant.
 
 It is a flat JSON array; each row is one action for one crop in one month:
 

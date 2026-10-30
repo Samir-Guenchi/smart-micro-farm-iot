@@ -15,7 +15,7 @@ Data refreshes every 30 s while the app is open (15 s for the pump state).
 ## Run
 
 ```bash
-cd web
+cd frontend/web
 npm install
 npm run dev            # http://localhost:5173
 ```

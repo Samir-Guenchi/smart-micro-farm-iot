@@ -43,7 +43,7 @@ it on the same small server as the backend (`docker compose` host or a VPS).
 ## Run it
 
 ```bash
-cd agent
+cd backend/agent
 python -m venv .venv && . .venv/bin/activate
 pip install -r requirements-dev.txt
 cp .env.example .env     # fill in NVIDIA_API_KEY or ANTHROPIC_API_KEY, API_TOKEN, TELEGRAM_*

@@ -79,7 +79,7 @@ bed sends a Telegram message.
 
 The custom platform starts here. Grafana stays as the internal tool.
 
-- **Web dashboard** in `web/`: live readings per bed, pump on/off with a manual
+- **Web dashboard** in `frontend/web/`: live readings per bed, pump on/off with a manual
   button, coop door state, last-seen per node, history charts.
 - **PWA from the start:** installable on the phone, push notifications next to
   the Telegram ones.

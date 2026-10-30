@@ -1,6 +1,6 @@
 # Knowledge base
 
-Short, practical farming notes that the AI farming assistant (`assistant/`)
+Short, practical farming notes that the AI farming assistant (`backend/assistant/`)
 searches to answer questions. One topic per file, in plain language.
 
 ## Writing a note

@@ -31,10 +31,10 @@ flowchart LR
   end
 
   subgraph Apps
-    WEB[Dashboard PWA<br/>web/]
-    AST[Farming assistant<br/>assistant/]
-    AGT[Farm agent<br/>agent/]
-    SITE[Public site + crop calendar<br/>site/]
+    WEB[Dashboard PWA<br/>frontend/web/]
+    AST[Farming assistant<br/>backend/assistant/]
+    AGT[Farm agent<br/>backend/agent/]
+    SITE[Public site + crop calendar<br/>frontend/site/]
   end
 
   IRR & HIVE & COOP -- "telemetry · status · event" --> MQ
@@ -81,12 +81,12 @@ flowchart LR
 | Farm API | `backend/api` | FastAPI: login, nodes, readings, events, pump control | Merged |
 | Alert bot | `backend/alerts` | Telegram: bed too dry, door open after sunset, node offline, pump too long | Merged |
 | Weather rule | `backend/weather` | Open-Meteo forecast; publishes `skip_auto_water` before rain | Merged |
-| Dashboard | `web/` | React PWA: farm overview, bed with Water-now button, coop, settings; i18n with RTL | Merged |
-| Public site | `site/` | Landing page, shop and visit links, crop calendar page; GitHub Pages | Merged |
+| Dashboard | `frontend/web/` | React PWA: farm overview, bed with Water-now button, coop, settings; i18n with RTL | Merged |
+| Public site | `frontend/site/` | Landing page, shop and visit links, crop calendar page; GitHub Pages | Merged |
 | Crop calendar data | `data/` | 5 countries × 12 months × 13 crops | Merged |
 | Knowledge base | `knowledge/` | Short farming notes for the assistant | Merged (drafts, founder review pending) |
-| Farming assistant | `assistant/` | Claude answers from `knowledge/` and the calendar, with citations | Merged (prototype) |
-| Farm agent | `agent/` | Claude with read tools over the API; suggests watering; farmer approves on Telegram | Merged (v1, mock data) |
+| Farming assistant | `backend/assistant/` | Claude answers from `knowledge/` and the calendar, with citations | Merged (prototype) |
+| Farm agent | `backend/agent/` | Claude with read tools over the API; suggests watering; farmer approves on Telegram | Merged (v1, mock data) |
 | Soil-drying model | `ml/` | Predicts hours until a bed needs water | Merged (trained on simulated data) |
 | Camera | | Live stream and motion snapshots | Not started (issue #18) |
 
@@ -148,8 +148,8 @@ Interactive docs: `/api/docs` on a running API.
 
 | | Reads | Can do | Guard rails |
 |---|---|---|---|
-| Assistant (`assistant/`) | `knowledge/`, crop calendar | Answer questions | Answers only from the notes, cites them, says "I don't know" otherwise |
-| Agent (`agent/`) | API (nodes, readings, events), Open-Meteo | Suggest watering a bed | Every action needs the farmer's Approve on Telegram; irrigation nodes only, 15 min max; nothing for the coop door or animals; every suggestion, decision and outcome logged |
+| Assistant (`backend/assistant/`) | `knowledge/`, crop calendar | Answer questions | Answers only from the notes, cites them, says "I don't know" otherwise |
+| Agent (`backend/agent/`) | API (nodes, readings, events), Open-Meteo | Suggest watering a bed | Every action needs the farmer's Approve on Telegram; irrigation nodes only, 15 min max; nothing for the coop door or animals; every suggestion, decision and outcome logged |
 | Model (`ml/`) | Moisture history, weather, forecast | Predict hours until a bed needs water | Advisory only; feeds the agent's suggestions |
 
 ## Data model (TimescaleDB)

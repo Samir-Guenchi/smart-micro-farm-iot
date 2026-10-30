@@ -1,10 +1,10 @@
 name: pages
 
-# Publishes site/ (landing page, crop calendar) and data/ to GitHub Pages.
+# Publishes frontend/site/ (landing page, crop calendar) and data/ to GitHub Pages.
 on:
   push:
     branches: [main]
-    paths: ["site/**", "data/**", ".github/workflows/pages.yml"]
+    paths: ["frontend/site/**", "data/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
 permissions:
@@ -24,10 +24,10 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - run: ./site/build.sh
+      - run: ./frontend/site/build.sh
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: site/_site
+          path: frontend/site/_site
       - id: deployment
         uses: actions/deploy-pages@v4

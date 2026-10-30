@@ -2,11 +2,11 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "buildCommand": "",
-  "outputDirectory": "assistant/static",
+  "outputDirectory": "backend/assistant/static",
   "functions": {
     "api/index.py": {
       "maxDuration": 60,
-      "excludeFiles": "{web,site,assets,backend,ml,docs,agent,.github}/**"
+      "excludeFiles": "{frontend,assets,ml,docs,.github,backend/agent,backend/alerts,backend/api,backend/db,backend/grafana,backend/ingest,backend/mosquitto,backend/weather}/**"
     }
   },
   "rewrites": [{ "source": "/(.*)", "destination": "/api/index" }]

@@ -10,7 +10,7 @@ from . import llm
 from .llm import NotConfigured
 from .knowledge import COUNTRY_NAMES, MONTH_NAMES, CropCalendar, KnowledgeBase
 
-REPO = Path(__file__).resolve().parents[2]
+REPO = Path(__file__).resolve().parents[3]
 DEFAULT_KNOWLEDGE = REPO / "knowledge"
 DEFAULT_CALENDAR = REPO / "data" / "crop-calendar.json"
 

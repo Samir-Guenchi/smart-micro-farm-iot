@@ -1,5 +1,5 @@
 # Python dependencies for the Vercel assistant function (api/index.py).
-# Keep in sync with assistant/requirements.txt.
+# Keep in sync with backend/assistant/requirements.txt.
 anthropic>=2.3,<3
 openai>=1.40,<4
 fastapi>=0.110
