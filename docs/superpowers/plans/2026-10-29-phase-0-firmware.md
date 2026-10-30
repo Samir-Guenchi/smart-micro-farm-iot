@@ -6,7 +6,7 @@
 
 **Architecture:** Each node is an independent PlatformIO project with a small shared local library for topic construction, JSON envelopes, status, last will, and QoS policy. Sensor code and node behavior remain local to their project.
 
-**Tech Stack:** PlatformIO, Arduino framework, `esp32dev`, ArduinoJson 7.4.3, 256dpi MQTT 2.4.6, Adafruit SHT31 2.2.2, HX711 0.7.5.
+**Tech Stack:** PlatformIO, Arduino framework, `esp32dev`, ArduinoJson 7.4.3, 256dpi MQTT 2.5.3, Adafruit SHT31 2.2.2, HX711 0.7.5.
 
 **Spec:** `docs/superpowers/specs/2026-10-29-phase-0-assigned-issues-design.md`
 
@@ -20,7 +20,7 @@
 - The irrigation pump is limited to `MAX_PUMP_S` (example value 900 seconds); a new command cannot extend an active run.
 - Hive humidity uses `air_humidity_pct`; coop telemetry uses `door_open` with `1` for open and `0` for closed.
 - Each node includes `include/secrets.example.h`; the real `include/secrets.h` remains untracked.
-- Use `256dpi/MQTT` because its MQTT client supports a retained QoS-configurable will and QoS-configurable publishes; `PubSubClient` only exposes QoS 0 publish calls. See [MQTTClient API](https://github.com/256dpi/arduino-mqtt/blob/v2.4.6/src/MQTTClient.h) and [PubSubClient API](https://github.com/knolleary/pubsubclient/blob/master/src/PubSubClient.h).
+- Use `256dpi/MQTT` because its MQTT client supports a retained QoS-configurable will and QoS-configurable publishes; `PubSubClient` only exposes QoS 0 publish calls. See [MQTTClient API](https://github.com/256dpi/arduino-mqtt/blob/v2.5.3/src/MQTTClient.h) and [PubSubClient API](https://github.com/knolleary/pubsubclient/blob/master/src/PubSubClient.h).
 - Use PlatformIO local symlink dependencies for the shared library; `lib_extra_dirs` is deprecated. See [PlatformIO `lib_deps`](https://docs.platformio.org/en/latest/projectconf/sections/env/options/library/lib_deps.html) and [`lib_extra_dirs`](https://docs.platformio.org/en/latest/projectconf/sections/env/options/library/lib_extra_dirs.html).
 
 ---
@@ -65,7 +65,7 @@ bool subscribeCommands(MQTTClient& client, const char* nodeId);
 }
 ```
 
-- [ ] Create `library.json` for `GreenLoopMqtt`, declaring `256dpi/MQTT` 2.4.6 and `bblanchon/ArduinoJson` 7.4.3.
+- [ ] Create `library.json` for `GreenLoopMqtt`, declaring `256dpi/MQTT` 2.5.3 and `bblanchon/ArduinoJson` 7.4.3.
 - [ ] Define the four channel names in one enum and implement `topicFor()` with the exact `greenloop/` prefix.
 - [ ] Implement the will, status, telemetry, event, and command-subscription helpers using the interface above.
 - [ ] Use JSON documents with caller-owned fields; serialize each envelope into a temporary `String` before publishing.
@@ -94,7 +94,7 @@ framework = arduino
 monitor_speed = 115200
 lib_deps =
   GreenLoopMqtt=symlink://../common/greenloop-mqtt
-  256dpi/MQTT@2.4.6
+  256dpi/MQTT@2.5.3
   bblanchon/ArduinoJson@7.4.3
   adafruit/Adafruit SHT31 Library@2.2.2
 ```
@@ -135,7 +135,7 @@ framework = arduino
 monitor_speed = 115200
 lib_deps =
   GreenLoopMqtt=symlink://../common/greenloop-mqtt
-  256dpi/MQTT@2.4.6
+  256dpi/MQTT@2.5.3
   bblanchon/ArduinoJson@7.4.3
   adafruit/Adafruit SHT31 Library@2.2.2
   bogde/HX711@0.7.5
@@ -172,7 +172,7 @@ framework = arduino
 monitor_speed = 115200
 lib_deps =
   GreenLoopMqtt=symlink://../common/greenloop-mqtt
-  256dpi/MQTT@2.4.6
+  256dpi/MQTT@2.5.3
   bblanchon/ArduinoJson@7.4.3
 ```
 
