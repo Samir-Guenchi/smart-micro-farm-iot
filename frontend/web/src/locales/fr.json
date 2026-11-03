@@ -8,7 +8,8 @@
     "overview": "Ferme",
     "bed": "Planche",
     "coop": "Poulailler",
-    "settings": "Réglages"
+    "settings": "Réglages",
+    "tools": "Outils"
   },
   "login": {
     "title": "Connexion",
@@ -95,5 +96,160 @@
     "install": "Installer l'application",
     "installHelp": "Ajoutez GreenLoop à l'écran d'accueil pour l'ouvrir comme une application.",
     "logout": "Se déconnecter"
+  },
+  "tools": {
+    "title": "Outils du fermier",
+    "water": "Combien de litres chaque planche demande aujourd'hui, selon la météo.",
+    "health": "Risque de maladies et de ravageurs d'après vos capteurs.",
+    "book": "Récoltes, ventes et dépenses, et une annonce à envoyer aux acheteurs."
+  },
+  "farm": {
+    "location": "Position de la ferme",
+    "locationHelp": "Nécessaire pour la météo. Elle reste sur ce téléphone.",
+    "useGps": "Utiliser ma position",
+    "gpsFailed": "Position introuvable. Saisissez les coordonnées.",
+    "lat": "Latitude",
+    "lon": "Longitude",
+    "save": "Enregistrer",
+    "badCoords": "Vérifiez les coordonnées, par exemple 36.75 et 3.06.",
+    "changeLocation": "Changer la position de la ferme"
+  },
+  "crops": {
+    "tomato": "Tomate",
+    "pepper": "Poivron",
+    "potato": "Pomme de terre",
+    "onion": "Oignon",
+    "lettuce": "Laitue",
+    "cucumber": "Concombre",
+    "zucchini": "Courgette",
+    "melon": "Melon",
+    "watermelon": "Pastèque",
+    "bean": "Haricot vert",
+    "strawberry": "Fraise",
+    "olive": "Olivier",
+    "date_palm": "Palmier dattier"
+  },
+  "water": {
+    "title": "Plan d'arrosage",
+    "today": "Aujourd'hui, cette planche a besoin d'environ",
+    "liters": "{{liters}} litres",
+    "minutes": "Soit {{minutes}} min de goutte-à-goutte.",
+    "timing": "Arrosez avant 9 h ou après 18 h : moins d'eau perdue au soleil et au vent.",
+    "hotDay": "Journée chaude, jusqu'à {{temp}} °C. Arrosez à l'aube et ombragez les jeunes plants.",
+    "rainDay": "{{mm}} mm de pluie prévus, déjà pris en compte.",
+    "forecastError": "Impossible de charger la météo.",
+    "cached": "Pas de connexion : prévisions enregistrées le {{when}}.",
+    "week": "7 prochains jours",
+    "day": "Jour",
+    "tmax": "Max",
+    "rain": "Pluie",
+    "need": "Eau",
+    "drip": "Goutte-à-goutte",
+    "weekTotal": "Semaine : {{liters}} L",
+    "weekCost": "environ {{cost}} {{currency}}",
+    "method": "Besoin de la culture = évapotranspiration (FAO-56, Open-Meteo) × coefficient cultural {{kc}}, moins 80 % de la pluie, plus 10 % de pertes du goutte-à-goutte.",
+    "setup": "Réglages de {{name}}",
+    "crop": "Culture",
+    "stage": "Stade",
+    "stages": {
+      "ini": "Jeune",
+      "mid": "Pleine croissance",
+      "end": "Maturation"
+    },
+    "area": "Surface de la planche (m²)",
+    "flow": "Débit du goutte-à-goutte (L/h)",
+    "flowHelp": "Débit = nombre de goutteurs × litres par heure chacun (souvent 2 L/h).",
+    "price": "Prix de l'eau par m³",
+    "currency": "Monnaie"
+  },
+  "health": {
+    "title": "Santé des plantes",
+    "disclaimer": "Un risque calculé d'après la météo de votre ferme, pas un diagnostic. Observez les plantes avant de traiter.",
+    "noSensor": "Pas assez de mesures de température et d'humidité du capteur de la planche ces 3 derniers jours.",
+    "level": {
+      "low": "Faible",
+      "medium": "Moyen",
+      "high": "Élevé"
+    },
+    "fungal": "Mildiou (feuilles mouillées)",
+    "fungalWhy_one": "Pire jour des 3 derniers : {{count}} heure très humide (90 %+, 10–25 °C).",
+    "fungalWhy_other": "Pire jour des 3 derniers : {{count}} heures très humides (90 %+, 10–25 °C).",
+    "fungalAdvice": {
+      "low": "Rien à faire. Continuez d'arroser au pied, pas sur les feuilles.",
+      "medium": "Aérez la serre le matin, arrosez le sol et non les feuilles, et regardez les feuilles du bas.",
+      "high": "Temps à mildiou. Inspectez aujourd'hui les feuilles de tomate et de pomme de terre (taches brunes au bord pâle). Retirez les feuilles malades et aérez. Si vous traitez, faites-le avant la pluie, pas après."
+    },
+    "mildew": "Oïdium",
+    "mildewWhy_one": "{{count}} heure chaude et mi-humide ces 3 derniers jours.",
+    "mildewWhy_other": "{{count}} heures chaudes et mi-humides ces 3 derniers jours.",
+    "mildewAdvice": {
+      "low": "Rien à faire.",
+      "medium": "Regardez sous les feuilles de concombre, courgette et melon : poudre blanche ?",
+      "high": "Temps à oïdium. Inspectez cucurbitacées et poivrons, retirez les feuilles blanchies et espacez les plants."
+    },
+    "tuta": "Mineuse de la tomate (Tuta absoluta)",
+    "tutaSince": "Compter depuis (plantation ou dernier contrôle des pièges)",
+    "tutaDD": "{{dd}} degrés-jours jusqu'ici. Une génération de papillons demande environ 460.",
+    "tutaProgress": "Avancement de la génération en cours",
+    "tutaCheck": "Une nouvelle génération de papillons va voler. Contrôlez les pièges à phéromones et cherchez des mines dans les feuilles cette semaine.",
+    "tutaWait": "Gardez les pièges en place et contrôlez-les chaque semaine."
+  },
+  "book": {
+    "title": "Cahier de la ferme",
+    "income": "Ventes",
+    "costs": "Dépenses",
+    "profit": "Bénéfice",
+    "crop": "Culture",
+    "cropOptional": "Culture (facultatif)",
+    "general": "Général",
+    "harvested": "Récolté",
+    "sold": "Vendu",
+    "avgPrice": "Prix moyen",
+    "add": "Ajouter au cahier",
+    "kind": "Type",
+    "kinds": {
+      "harvest": "Récolte",
+      "sale": "Vente",
+      "cost": "Dépense"
+    },
+    "date": "Date",
+    "kg": "Quantité (kg)",
+    "pricePerKg": "Prix au kg",
+    "buyer": "Acheteur (facultatif)",
+    "category": "Pour quoi",
+    "categories": {
+      "water": "Eau",
+      "seeds": "Semences et plants",
+      "fertilizer": "Engrais",
+      "treatment": "Traitement",
+      "fuel": "Carburant et électricité",
+      "labor": "Main-d'œuvre",
+      "other": "Autre"
+    },
+    "amount": "Montant",
+    "note": "Note (facultatif)",
+    "save": "Enregistrer",
+    "added": "Enregistré.",
+    "incomplete": "Indiquez la culture et une quantité ou un montant.",
+    "entries": "Entrées",
+    "empty": "Rien pour l'instant. Ajoutez une première récolte, vente ou dépense.",
+    "export": "Exporter en CSV",
+    "delete": "Supprimer",
+    "confirmDelete": "Supprimer cette entrée ?",
+    "notSaved": "Ce navigateur bloque le stockage : les entrées seront perdues à la fermeture. Exportez-les."
+  },
+  "listing": {
+    "title": "Vendre : partager une annonce",
+    "help": "Préparez un message pour WhatsApp, Facebook ou SMS et vendez directement aux acheteurs.",
+    "placeLabel": "Où (village, marché)",
+    "phoneLabel": "Votre téléphone (facultatif)",
+    "headline": "🌱 {{crop}} frais, directement de la ferme",
+    "quantity": "Disponible : {{kg}} kg",
+    "price": "Prix : {{price}} {{currency}}/kg",
+    "place": "Retrait : {{place}}",
+    "call": "Appel ou WhatsApp : {{phone}}",
+    "footer": "Cultivé au goutte-à-goutte, cueilli à la commande.",
+    "whatsapp": "Envoyer sur WhatsApp",
+    "share": "Partager…"
   }
 }

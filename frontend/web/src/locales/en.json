@@ -8,7 +8,8 @@
     "overview": "Farm",
     "bed": "Bed",
     "coop": "Coop",
-    "settings": "Settings"
+    "settings": "Settings",
+    "tools": "Tools"
   },
   "login": {
     "title": "Sign in",
@@ -91,5 +92,160 @@
     "install": "Install app",
     "installHelp": "Add GreenLoop to the home screen to open it like an app.",
     "logout": "Sign out"
+  },
+  "tools": {
+    "title": "Farmer tools",
+    "water": "How many liters each bed needs today, from the weather forecast.",
+    "health": "Disease and pest risk from your own sensors.",
+    "book": "Harvests, sales and costs, and a listing to send to buyers."
+  },
+  "farm": {
+    "location": "Farm location",
+    "locationHelp": "Needed for the weather forecast. It stays on this phone.",
+    "useGps": "Use my location",
+    "gpsFailed": "Could not get the location. Type the coordinates instead.",
+    "lat": "Latitude",
+    "lon": "Longitude",
+    "save": "Save",
+    "badCoords": "Check the coordinates, for example 36.75 and 3.06.",
+    "changeLocation": "Change farm location"
+  },
+  "crops": {
+    "tomato": "Tomato",
+    "pepper": "Pepper",
+    "potato": "Potato",
+    "onion": "Onion",
+    "lettuce": "Lettuce",
+    "cucumber": "Cucumber",
+    "zucchini": "Zucchini",
+    "melon": "Melon",
+    "watermelon": "Watermelon",
+    "bean": "Green bean",
+    "strawberry": "Strawberry",
+    "olive": "Olive tree",
+    "date_palm": "Date palm"
+  },
+  "water": {
+    "title": "Water plan",
+    "today": "Today this bed needs about",
+    "liters": "{{liters}} liters",
+    "minutes": "That is {{minutes}} min of drip.",
+    "timing": "Water before 9:00 or after 18:00: less water is lost to the sun and wind.",
+    "hotDay": "Hot day, up to {{temp}} °C. Water at dawn and shade young plants.",
+    "rainDay": "{{mm}} mm of rain expected, already counted in.",
+    "forecastError": "Could not load the weather forecast.",
+    "cached": "No connection: showing the forecast saved on {{when}}.",
+    "week": "Next 7 days",
+    "day": "Day",
+    "tmax": "Max",
+    "rain": "Rain",
+    "need": "Water",
+    "drip": "Drip",
+    "weekTotal": "Week: {{liters}} L",
+    "weekCost": "about {{cost}} {{currency}}",
+    "method": "Crop water use = evapotranspiration (FAO-56, Open-Meteo) × crop factor {{kc}}, minus 80 % of the rain, plus 10 % drip losses.",
+    "setup": "{{name}} setup",
+    "crop": "Crop",
+    "stage": "Growth stage",
+    "stages": {
+      "ini": "Young",
+      "mid": "Full growth",
+      "end": "Ripening"
+    },
+    "area": "Bed area (m²)",
+    "flow": "Drip flow (L/h)",
+    "flowHelp": "Drip flow = number of drippers × liters per hour each (often 2 L/h).",
+    "price": "Water price per m³",
+    "currency": "Currency"
+  },
+  "health": {
+    "title": "Plant health",
+    "disclaimer": "Risk from the weather on your farm, not a diagnosis. Check the plants before you treat.",
+    "noSensor": "Not enough temperature and humidity readings from the bed sensor in the last 3 days.",
+    "level": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "fungal": "Mildew and blight (wet leaves)",
+    "fungalWhy_one": "Worst day of the last 3: {{count}} very humid hour (90 %+, 10–25 °C).",
+    "fungalWhy_other": "Worst day of the last 3: {{count}} very humid hours (90 %+, 10–25 °C).",
+    "fungalAdvice": {
+      "low": "Nothing to do. Keep watering at the roots, not on the leaves.",
+      "medium": "Open the greenhouse in the morning, water the soil, not the leaves, and check the lower leaves for spots.",
+      "high": "Blight weather. Check tomato and potato leaves today for brown spots with a pale edge. Remove sick leaves and ventilate. If you spray, do it before rain, not after."
+    },
+    "mildew": "Powdery mildew",
+    "mildewWhy_one": "{{count}} warm, half-humid hour in the last 3 days.",
+    "mildewWhy_other": "{{count}} warm, half-humid hours in the last 3 days.",
+    "mildewAdvice": {
+      "low": "Nothing to do.",
+      "medium": "Look under the leaves of cucumber, zucchini and melon for white powder.",
+      "high": "Mildew weather. Check cucurbits and peppers, remove white-powdered leaves, and keep plants spaced for air."
+    },
+    "tuta": "Tomato leaf miner (Tuta absoluta)",
+    "tutaSince": "Counting since (planting or last trap check)",
+    "tutaDD": "{{dd}} degree-days so far. One moth generation needs about 460.",
+    "tutaProgress": "Progress of the current generation",
+    "tutaCheck": "A new generation of moths is about to fly. Check the pheromone traps and look for mines in the leaves this week.",
+    "tutaWait": "Keep the traps up and check them weekly."
+  },
+  "book": {
+    "title": "Farm book",
+    "income": "Sales",
+    "costs": "Costs",
+    "profit": "Profit",
+    "crop": "Crop",
+    "cropOptional": "Crop (optional)",
+    "general": "General",
+    "harvested": "Harvested",
+    "sold": "Sold",
+    "avgPrice": "Avg. price",
+    "add": "Add to the book",
+    "kind": "Type",
+    "kinds": {
+      "harvest": "Harvest",
+      "sale": "Sale",
+      "cost": "Cost"
+    },
+    "date": "Date",
+    "kg": "Quantity (kg)",
+    "pricePerKg": "Price per kg",
+    "buyer": "Buyer (optional)",
+    "category": "What for",
+    "categories": {
+      "water": "Water",
+      "seeds": "Seeds and plants",
+      "fertilizer": "Fertilizer",
+      "treatment": "Treatment",
+      "fuel": "Fuel and power",
+      "labor": "Labor",
+      "other": "Other"
+    },
+    "amount": "Amount",
+    "note": "Note (optional)",
+    "save": "Save",
+    "added": "Saved.",
+    "incomplete": "Fill in the crop and a quantity or amount.",
+    "entries": "Entries",
+    "empty": "Nothing yet. Add your first harvest, sale or cost.",
+    "export": "Export CSV",
+    "delete": "Delete",
+    "confirmDelete": "Delete this entry?",
+    "notSaved": "This browser blocks storage: entries will be lost when the app closes. Export them."
+  },
+  "listing": {
+    "title": "Sell: share a listing",
+    "help": "Make a ready message for WhatsApp, Facebook or SMS and sell straight to buyers.",
+    "placeLabel": "Where (village, market)",
+    "phoneLabel": "Your phone (optional)",
+    "headline": "🌱 Fresh {{crop}} straight from the farm",
+    "quantity": "Available: {{kg}} kg",
+    "price": "Price: {{price}} {{currency}}/kg",
+    "place": "Pick up: {{place}}",
+    "call": "Call or WhatsApp: {{phone}}",
+    "footer": "Grown with drip irrigation, picked to order.",
+    "whatsapp": "Send on WhatsApp",
+    "share": "Share…"
   }
 }
