@@ -8,9 +8,19 @@ phone as a Progressive Web App.
 | **Farm** | One card per node: live values, online/offline, last seen |
 | **Bed** | Pump on/off, **Water now** button with a 5/10/15 min picker (confirm first), soil moisture history for 6 h / 24 h / 3 days |
 | **Coop** | Door state and today's open/close times |
+| **Tools → Water plan** | Liters and drip minutes per bed for today and the next 7 days, from FAO-56 evapotranspiration (Open-Meteo) × crop coefficient, minus effective rain; hot days flagged; weekly water cost |
+| **Tools → Plant health** | Blight/downy mildew and powdery mildew risk from the bed sensor's temperature and humidity, and *Tuta absoluta* degree-days to time trap checks |
+| **Tools → Farm book** | Harvests, sales and costs with profit per crop, CSV export, and a ready-to-send produce listing for WhatsApp or any app |
 | **Settings** | Language, push notifications, install button, sign out |
 
 Data refreshes every 30 s while the app is open (15 s for the pump state).
+
+The farmer tools work without the backend: the weather comes straight from
+[Open-Meteo](https://open-meteo.com/) (free, no key) and the last forecast is
+kept on the phone, so the water plan still shows with no signal in the field.
+The farm's location, bed setup and Farm book entries are stored on the device
+only (Farm book sync to the server is issue #56). Set `VITE_FARM_LAT` /
+`VITE_FARM_LON` to skip the location step for your own farm.
 
 ## Run
 

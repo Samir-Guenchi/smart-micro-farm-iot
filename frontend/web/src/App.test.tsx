@@ -94,3 +94,46 @@ describe("mock API", () => {
     expect(await res.json()).toEqual({ ok: true, duration_s: 900 });
   });
 });
+
+describe("farmer tools", () => {
+  it("shows today's water need in demo mode", async () => {
+    setToken("mock-token");
+    window.location.hash = "#/water";
+    render(<App />);
+    const today = await screen.findByTestId("water-today");
+    expect(today).toHaveTextContent(/liters/);
+    expect(today).toHaveTextContent(/min of drip/);
+    expect(screen.getByRole("table")).toBeInTheDocument();
+  });
+
+  it("shows plant health risks from the bed sensor", async () => {
+    setToken("mock-token");
+    window.location.hash = "#/health";
+    render(<App />);
+    expect(await screen.findByTestId("risk-fungal")).toBeInTheDocument();
+    expect(screen.getByTestId("risk-mildew")).toBeInTheDocument();
+    expect(await within(screen.getByTestId("risk-tuta")).findByText(/degree-days/)).toBeInTheDocument();
+  });
+
+  it("logs a sale, totals it, and builds a listing", async () => {
+    setToken("mock-token");
+    window.location.hash = "#/book";
+    const user = userEvent.setup();
+    render(<App />);
+    const form = await screen.findByRole("form", { name: "Add to the book" });
+    await user.click(within(form).getByLabelText("Sale"));
+    await user.type(within(form).getByLabelText("Crop"), "Tomato");
+    await user.type(within(form).getByLabelText("Quantity (kg)"), "40");
+    await user.type(within(form).getByLabelText("Price per kg"), "120");
+    await user.click(within(form).getByRole("button", { name: "Save" }));
+    expect(within(screen.getByTestId("book-totals")).getAllByText("4,800 DA")).toHaveLength(2); // sales and profit
+    expect(JSON.parse(localStorage.getItem("greenloop.book")!)).toHaveLength(1);
+
+    const crops = screen.getAllByLabelText("Crop");
+    await user.type(crops[crops.length - 1], "Tomato");
+    const qty = screen.getAllByLabelText("Quantity (kg)");
+    await user.type(qty[qty.length - 1], "40");
+    expect(screen.getByTestId("listing-text")).toHaveTextContent("Fresh Tomato straight from the farm");
+    expect(screen.getByRole("link", { name: "Send on WhatsApp" }).getAttribute("href")).toContain("wa.me");
+  });
+});
