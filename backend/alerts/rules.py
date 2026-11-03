@@ -53,6 +53,45 @@ class Config:
         )
 
 
+# What to do before each weather risk. Short, because it is read on a phone in the field.
+WEATHER_ADVICE = {
+    "heat": (
+        "🔥 Heat wave on {day}: up to {peak:.0f} °C (from {start}).\n"
+        "Water early in the morning, not at midday. Put up shade net on young plants, mulch the beds, "
+        "give the hens extra water and shade, and check the hive has water nearby."
+    ),
+    "sirocco": (
+        "🌬️🔥 Sirocco on {day}: hot, dry wind, {peak:.0f} °C (from {start}).\n"
+        "Water the evening before and at dawn, close greenhouse sides on the wind side, "
+        "cover seedlings, and don't spray or transplant that day."
+    ),
+    "frost": (
+        "❄️ Frost risk on {day}: down to {peak:.0f} °C (around {peak_time}).\n"
+        "Cover seedlings and flowering crops with fleece in the evening, water the soil in the afternoon "
+        "(moist soil holds heat), and close the coop early."
+    ),
+    "wind": (
+        "💨 Strong wind on {day}: gusts up to {peak:.0f} km/h (from {start}).\n"
+        "Tie down shade net and plastic, stake tall plants, put a weight on the hive roof, and don't spray."
+    ),
+}
+
+
+def weather_text(event):
+    kind = event.get("state")
+    template = WEATHER_ADVICE.get(kind)
+    if not template:
+        return None
+    start = datetime.fromtimestamp(int(event.get("start") or 0), timezone.utc)
+    peak_time = datetime.fromtimestamp(int(event.get("peak_ts") or event.get("start") or 0), timezone.utc)
+    return template.format(
+        day=event.get("day", ""),
+        peak=float(event.get("peak") or 0),
+        start=_fmt_time(start),
+        peak_time=_fmt_time(peak_time),
+    )
+
+
 def _fmt_time(dt):
     return dt.astimezone().strftime("%H:%M")
 
@@ -69,6 +108,8 @@ class Rules:
         self.door_state = None
         self.pump_since = {}
         self.pump_expected_s = {}
+        self.pending = []  # one-off alerts (weather risks) to send on the next tick
+        self.weather_seen = set()
 
     # Inputs ---------------------------------------------------------------
 
@@ -95,7 +136,9 @@ class Rules:
     def on_event(self, node, event, now):
         self.last_seen[node] = now
         kind, state = event.get("type"), event.get("state")
-        if kind == "door" and node == self.cfg.door_node:
+        if kind == "weather_risk":
+            self._weather(event)
+        elif kind == "door" and node == self.cfg.door_node:
             self.door_state = state
         elif kind == "pump":
             if state == "started":
@@ -105,6 +148,15 @@ class Rules:
             elif state == "stopped":
                 self._pump_stopped(node)
 
+    def _weather(self, event):
+        # Forecast warnings are one-off: no "resolved" message, and one per kind per day even if
+        # the weather service restarts and publishes the same risk again.
+        key = f"weather:{event.get('state')}:{event.get('day')}"
+        text = weather_text(event)
+        if text and key not in self.weather_seen:
+            self.weather_seen.add(key)
+            self.pending.append(Alert(key, text))
+
     def _pump_stopped(self, node):
         self.pump_since.pop(node, None)
         self.pump_expected_s.pop(node, None)
@@ -112,7 +164,7 @@ class Rules:
     # Evaluation -----------------------------------------------------------
 
     def tick(self, now):
-        alerts = []
+        alerts, self.pending = self.pending, []
         alerts += self._check_dry(now)
         alerts += self._check_door(now)
         alerts += self._check_offline(now)

@@ -127,3 +127,21 @@ def test_config_from_toml_file():
     path = Path(__file__).resolve().parents[1] / "config.example.toml"
     cfg = Config.from_toml(tomllib.loads(path.read_text()))
     assert cfg.dry_minutes == 30 and cfg.offline_minutes == 10 and cfg.door_minutes_after_sunset == 30
+
+
+def test_weather_risk_sends_one_alert_with_advice():
+    r = make()
+    event = {"type": "weather_risk", "state": "sirocco", "day": "2026-06-02", "start": 1780394400, "peak_ts": 1780398000, "peak": 41.2}
+    r.on_event("weather", event, NOON)
+    [alert] = r.tick(NOON)
+    assert alert.key == "weather:sirocco:2026-06-02" and not alert.resolved
+    assert "41 °C" in alert.text and "Water the evening before" in alert.text
+    # The weather service re-publishes after a restart: no second message.
+    r.on_event("weather", event, NOON + minutes(1))
+    assert keys(r.tick(NOON + minutes(1))) == []
+
+
+def test_unknown_weather_risk_is_ignored():
+    r = make()
+    r.on_event("weather", {"type": "weather_risk", "state": "meteor", "day": "2026-06-02"}, NOON)
+    assert r.tick(NOON) == []

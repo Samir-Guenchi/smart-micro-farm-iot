@@ -16,6 +16,7 @@ Environment (see README.md):
   MQTT_HOST, MQTT_PORT, MQTT_USER, MQTT_PASSWORD
   DECISION_LOG                    JSON lines file (default decisions.jsonl)
   DATABASE_URL                    optional; decisions also go to the irrigation_decisions table
+  HEAT_C, SIROCCO_C, FROST_C, ... weather risk thresholds, see risks.py and README.md
 """
 
 import json
@@ -27,6 +28,8 @@ import urllib.parse
 import urllib.request
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
+
+import risks
 
 log = logging.getLogger("weather")
 
@@ -69,10 +72,11 @@ def fetch_forecast(cfg, timeout=20):
     params = urllib.parse.urlencode({
         "latitude": cfg.latitude,
         "longitude": cfg.longitude,
-        "hourly": "precipitation,precipitation_probability",
+        "hourly": f"precipitation,precipitation_probability,{risks.HOURLY_VARS}",
         "forecast_days": 3,
         "timeformat": "unixtime",
-        "timezone": "UTC",
+        # Times stay unix; "auto" only adds utc_offset_seconds, used to group weather risks by local day.
+        "timezone": "auto",
     })
     with urllib.request.urlopen(f"{OPEN_METEO}?{params}", timeout=timeout) as resp:
         return json.load(resp)
@@ -154,7 +158,7 @@ class DecisionLog:
             )
 
 
-def publish(cfg, payload):
+def publish(cfg, payload, topic=None, retain=True):
     import paho.mqtt.publish as mqtt_publish
 
     user = os.environ.get("MQTT_USER")
@@ -162,10 +166,10 @@ def publish(cfg, payload):
     # TLS for hosted brokers (HiveMQ Cloud, EMQX); on by default for port 8883.
     tls = os.environ.get("MQTT_TLS", "").lower() in ("1", "true", "yes") or port == 8883
     mqtt_publish.single(
-        f"greenloop/{cfg.node}/cmd",
+        topic or f"greenloop/{cfg.node}/cmd",
         json.dumps(payload),
         qos=1,
-        retain=True,
+        retain=retain,
         hostname=os.environ.get("MQTT_HOST", "localhost"),
         port=port,
         auth={"username": user, "password": os.environ.get("MQTT_PASSWORD")} if user else None,
@@ -173,14 +177,20 @@ def publish(cfg, payload):
     )
 
 
-def run_once(cfg, log_, previous):
+def run_once(cfg, log_, previous, risk_cfg=None, notified=None):
     forecast = fetch_forecast(cfg)
-    decision = decide(forecast, time.time(), cfg)
+    now = time.time()
+    decision = decide(forecast, now, cfg)
     log_.write(decision, cfg.node)
     cmd = command_for(decision, previous)
     if cmd:
         publish(cfg, cmd)
     log.info("%s: %s%s", "SKIP" if decision.skip else "water as usual", decision.reason, f" -> published {cmd}" if cmd else "")
+    if risk_cfg and notified is not None:
+        for risk in notified.new(risks.detect(forecast, now, risk_cfg)):
+            # Not retained: an alert is news once; ingest keeps the history in the events table.
+            publish(cfg, risk.event(), topic="greenloop/weather/event", retain=False)
+            log.info("weather risk %s on %s (peak %s)", risk.kind, risk.day, risk.peak)
     return decision
 
 
@@ -189,10 +199,11 @@ def main():
     cfg = Config.from_env()
     log_ = DecisionLog(os.environ.get("DECISION_LOG", "decisions.jsonl"), os.environ.get("DATABASE_URL"))
     every = float(os.environ.get("CHECK_EVERY_H", "3")) * 3600
+    risk_cfg, notified = risks.RiskConfig.from_env(), risks.Notified()
     previous = None
     while True:
         try:
-            previous = run_once(cfg, log_, previous)
+            previous = run_once(cfg, log_, previous, risk_cfg, notified)
         except Exception:  # keep running through network or broker hiccups
             log.exception("check failed, retrying in 10 min")
             time.sleep(600)
