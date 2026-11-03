@@ -80,3 +80,31 @@ With Docker, next to the rest of the backend stack in `backend/docker-compose.ym
 ```bash
 python -m pytest -q
 ```
+
+## Weather risk alerts
+
+The same forecast is also checked for weather that can ruin a crop in a day
+(issue #49). For the next 48 h, it looks for:
+
+| Risk | Condition (any hour) | Variable |
+|---|---|---|
+| Heat wave | temperature ≥ 38 °C | `HEAT_C` |
+| Sirocco (hot, dry wind) | ≥ 35 °C **and** humidity ≤ 20 % **and** wind ≥ 30 km/h | `SIROCCO_C`, `SIROCCO_HUMIDITY_PCT`, `SIROCCO_WIND_KMH` |
+| Frost | temperature ≤ 2 °C (air at 2 m, so ground frost is likely) | `FROST_C` |
+| Strong wind | gusts ≥ 60 km/h | `GUST_KMH` |
+
+`RISK_WINDOW_H` (default 48) sets the look-ahead. Each risk is published once
+per farm-local day as an event on `greenloop/weather/event`:
+
+```json
+{"type": "weather_risk", "state": "heat", "day": "2027-07-01",
+ "start": 1814443200, "peak_ts": 1814446800, "peak": 41.0, "hours": 3}
+```
+
+Ingest stores it in the `events` table (the `weather` publisher is not shown as
+a node), and the alert bot sends one Telegram message per risk per day, with
+what to do: water at dawn and put up shade before heat, water the evening
+before a sirocco, cover seedlings before frost, tie down nets before wind.
+
+The defaults suit North Africa and southern Europe. On a farm in a cooler
+climate, lower `HEAT_C` (for example to 32).

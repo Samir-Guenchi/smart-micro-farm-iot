@@ -37,6 +37,10 @@ def _ts(value):
         return datetime.now(timezone.utc)
 
 
+# Publishers that are services, not ESP32 nodes.
+SERVICE_NODES = {"weather"}
+
+
 def parse(topic, payload):
     """Turns one MQTT message into a list of (table, row) tuples to write.
 
@@ -80,7 +84,7 @@ def parse(topic, payload):
         if not msg.get("type"):
             return []
         extra = {k: v for k, v in msg.items() if k not in ("ts", "type", "state", "reason")}
-        return [
+        rows = [
             ("events", {
                 "ts": ts,
                 "node": node,
@@ -89,8 +93,12 @@ def parse(topic, payload):
                 "reason": msg.get("reason"),
                 "data": json.dumps(extra),
             }),
-            ("node_status", {"node": node, "status": "online", "last_seen": ts}),
         ]
+        # Services such as the weather checker publish events too, but they are not devices,
+        # so they must not appear as nodes (and then go "offline") on the dashboard.
+        if node not in SERVICE_NODES:
+            rows.append(("node_status", {"node": node, "status": "online", "last_seen": ts}))
+        return rows
 
     return []
 

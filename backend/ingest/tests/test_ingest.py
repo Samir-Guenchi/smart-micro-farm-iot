@@ -35,3 +35,10 @@ def test_garbage_is_ignored():
     assert parse("other/irrigation-1/telemetry", b"{}") == []
     assert parse("greenloop/irrigation-1/cmd", b'{"action": "pump"}') == []
     assert parse("greenloop/irrigation-1/event", b'{"ts": 1}') == []
+
+
+def test_weather_events_are_stored_but_weather_is_not_a_node():
+    payload = json.dumps({"type": "weather_risk", "state": "heat", "day": "2027-07-01", "peak": 41.0}).encode()
+    rows = parse("greenloop/weather/event", payload)
+    assert [t for t, _ in rows] == ["events"]
+    assert json.loads(rows[0][1]["data"])["peak"] == 41.0

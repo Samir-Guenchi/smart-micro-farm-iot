@@ -9,6 +9,7 @@ something needs attention. No app needed: alerts arrive on the farmer's phone.
 | 🐔 Door still open | the coop door's last reported state is `open` 30 min after sunset (sunset computed from the farm's coordinates) | the door reports `closed`, or sunrise |
 | 📡 Node offline | a node publishes `offline` (its MQTT last will) or sends nothing for 10 min | the node sends data or `online` again |
 | 💧 Pump running too long | the pump runs past its requested `duration_s` + 2 min grace, or past 20 min when no duration was given | the pump stops |
+| 🔥 ❄️ 💨 Weather risk | the weather service forecasts a heat wave, sirocco, frost or strong wind (`weather_risk` event, see `backend/weather/README.md`) | one-off: one message per risk per day, with what to do |
 
 Each condition sends **one** alert and stays quiet until it clears, then sends
 one "resolved" message. No spam. All thresholds live in `config.toml`.
